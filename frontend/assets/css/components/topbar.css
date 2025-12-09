@@ -1,0 +1,369 @@
+/* =====================================
+   PRONTIO - TOPBAR GLOBAL (COMPONENT)
+   - Título da página
+   - Breadcrumb
+   - Ações e metadados
+   - Bloco de resumo (chips)
+===================================== */
+
+/* IMPORTANTE:
+   Este arquivo define APENAS o componente topbar.
+   O layout global (app-shell, main-area, etc.)
+   está em: assets/css/core/layout.css
+
+   Cores e tipografia de base vêm de:
+   - tokens.css      → variáveis globais
+   - typography.css  → fonte, textos e links padrão
+*/
+
+/* ===========================
+   TOPO GLOBAL
+=========================== */
+
+.topbar {
+  background: var(--cor-fundo-card, #ffffff);
+  border-bottom: 1px solid var(--cor-borda-suave, #e5e7eb);
+  padding: 10px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* título + meta alinhados */
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* COLUNAS (usadas pela agenda e páginas novas) */
+.topbar-col-left,
+.topbar-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* COLUNA ESQUERDA (título, breadcrumb, subtítulo) */
+.topbar-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Breadcrumb / Caminho */
+.topbar-breadcrumb {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--cor-texto-suave, #6b7280);
+  text-transform: uppercase;
+}
+
+/* Título + Badge (tag) */
+.topbar-title-main {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.topbar-title-main h1,
+#topbar-title-text {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--cor-texto-principal, #111827);
+}
+
+/* Badge / Tag */
+.topbar-tag {
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #0d47a1;
+  background: #e3f2fd;
+  border: 1px solid #bbdefb;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topbar-tag:empty {
+  display: none;
+}
+
+/* Subtítulo */
+.topbar-subtitle,
+#topbar-subtitle {
+  font-size: 13px;
+  color: var(--cor-texto-secundario, #4b5563);
+  margin: 0;
+}
+
+/* COLUNA DIREITA (ações + meta) */
+.topbar-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 160px;
+}
+
+/* Área para botões / filtros específicos de cada página */
+.topbar-extra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-extra > * {
+  display: inline-flex;
+}
+
+/* Meta-informações (data, contexto, etc.) */
+.topbar-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--cor-texto-suave, #6b7280);
+}
+
+.topbar-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Ícones dentro do meta */
+.topbar-meta-item svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.8;
+}
+
+/* ===========================
+   BOTÃO MOBILE (MENU)
+=========================== */
+
+/* Linha que agrupa o botão sanduíche + breadcrumb */
+.topbar-left-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Botão sanduíche: escondido em desktop */
+.topbar-menu-button {
+  display: none;
+}
+
+/* Em telas menores, mostramos o botão (drawer mobile) */
+@media (max-width: 900px) {
+  .topbar-menu-button {
+    display: inline-flex;
+    margin-right: 4px;
+  }
+}
+
+/* ===========================
+   RESPONSIVIDADE TOPBAR
+=========================== */
+
+@media (max-width: 900px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 16px;
+    gap: 8px;
+  }
+
+  .topbar-actions {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .topbar-col-left,
+  .topbar-col-right {
+    width: 100%;
+  }
+
+  .topbar-title-main h1,
+  #topbar-title-text {
+    font-size: 19px;
+  }
+
+  .topbar-subtitle,
+  #topbar-subtitle {
+    font-size: 12px;
+  }
+
+  .topbar-meta {
+    flex-wrap: wrap;
+    font-size: 11px;
+  }
+}
+
+/* ======================================
+   BLOCO GENÉRICO DE RESUMO NA TOPBAR
+   - Usar em QUALQUER página:
+     .topbar-summary
+       .topbar-summary-date
+       .topbar-summary-stats
+       .topbar-chip
+====================================== */
+
+/* Container geral: texto + chips */
+.topbar-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+}
+
+/* Bloco “Data em foco”, “Período”, etc. */
+.topbar-summary-date {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topbar-summary-label {
+  font-size: 11px;
+  color: var(--cor-texto-suave, #6b7280);
+}
+
+.topbar-summary-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cor-texto-principal, #111827);
+}
+
+/* Grupo de chips (estatísticas) */
+.topbar-summary-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Chip genérico */
+.topbar-chip {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 90px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  border: 1px solid var(--cor-borda-suave, #e5e7eb);
+  font-size: 12px;
+}
+
+.topbar-chip-label {
+  color: var(--cor-texto-suave, #6b7280);
+}
+
+.topbar-chip-value {
+  font-weight: 600;
+  color: var(--cor-texto-principal, #111827);
+}
+
+/* Modificadores genéricos de status */
+.topbar-chip--ok {
+  border-color: var(--cor-sucesso, #2a9d8f);
+  background: #e6f4f1;
+}
+
+.topbar-chip--warning {
+  border-color: var(--cor-aviso, #ffbb00);
+  background: #fff8e6;
+}
+
+.topbar-chip--danger {
+  border-color: var(--cor-perigo, #e63946);
+  background: #ffe6e9;
+}
+
+/* Responsivo do bloco de resumo */
+@media (max-width: 900px) {
+  .topbar-summary {
+    align-items: flex-start;
+  }
+}
+
+/* ======================================
+   COMPATIBILIDADE: TOPBAR DA AGENDA
+   - Classes antigas mapeadas para o padrão genérico
+====================================== */
+
+/* Reutiliza as mesmas regras do genérico (aliases) */
+
+.topbar-summary,
+.topbar-agenda-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+}
+
+.topbar-summary-date,
+.topbar-agenda-date {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topbar-summary-label,
+.topbar-agenda-label {
+  font-size: 11px;
+  color: var(--cor-texto-suave, #6b7280);
+}
+
+.topbar-summary-value,
+.topbar-agenda-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cor-texto-principal, #111827);
+}
+
+.topbar-summary-stats,
+.topbar-agenda-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.topbar-chip,
+.topbar-agenda-chip {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 90px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  border: 1px solid var(--cor-borda-suave, #e5e7eb);
+  font-size: 12px;
+}
+
+.topbar-chip-label,
+.topbar-agenda-chip .chip-label {
+  color: var(--cor-texto-suave, #6b7280);
+}
+
+.topbar-chip-value,
+.topbar-agenda-chip .chip-value {
+  font-weight: 600;
+  color: var(--cor-texto-principal, #111827);
+}
+
+/* Cores de status reaproveitando os modificadores genéricos */
+.topbar-agenda-chip.chip-ok {
+  border-color: var(--cor-sucesso, #2a9d8f);
+  background: #e6f4f1;
+}
+
+.topbar-agenda-chip.chip-pending {
+  border-color: var(--cor-aviso, #ffbb00);
+  background: #fff8e6;
+}
+
+/* Ajuste de fonte específico da agenda (se necessário) */
+.topbar-agenda .topbar-meta {
+  font-size: 12px;
+}

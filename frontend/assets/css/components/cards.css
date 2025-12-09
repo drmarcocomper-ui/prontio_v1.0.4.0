@@ -1,0 +1,165 @@
+/* =====================================
+   PRONTIO - CARDS
+   - Containers visuais para grupos de informação
+   - Variações por contexto (sucesso, aviso, perigo)
+===================================== */
+
+/* CARD BASE */
+.card {
+  background-color: var(--cor-fundo-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--cor-borda-suave);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Card simples sem sombra (ex.: blocos em formulários) */
+.card-flat {
+  box-shadow: none;
+}
+
+/* CARD HEADER / BODY / FOOTER */
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--cor-texto-secundario);
+}
+
+.card-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-body {
+  font-size: 13px;
+  color: var(--cor-texto-principal);
+}
+
+.card-footer {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--cor-borda-suave);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* CARD COM LAYOUT EM COLUNAS (EX: DASHBOARD) */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* VARIAÇÕES DE CONTEXTO (ALERTA, SUCESSO, PERIGO) */
+
+.card-success {
+  border-color: rgba(42, 157, 143, 0.4);
+  background-color: rgba(42, 157, 143, 0.05);
+}
+
+.card-success .card-title {
+  color: var(--cor-sucesso);
+}
+
+.card-warning {
+  border-color: rgba(255, 187, 0, 0.6);
+  background-color: rgba(255, 187, 0, 0.06);
+}
+
+.card-warning .card-title {
+  color: #935f00;
+}
+
+.card-danger {
+  border-color: rgba(230, 57, 70, 0.7);
+  background-color: rgba(230, 57, 70, 0.06);
+}
+
+.card-danger .card-title {
+  color: var(--cor-perigo);
+}
+
+/* CARD COM ÍCONE À ESQUERDA (EX: RESUMOS) */
+
+.card-with-icon {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 102, 204, 0.1);
+  color: var(--cor-primaria);
+}
+
+/* Estados específicos combinando com contexto */
+
+.card-success .card-icon {
+  background-color: rgba(42, 157, 143, 0.16);
+  color: var(--cor-sucesso);
+}
+
+.card-warning .card-icon {
+  background-color: rgba(255, 187, 0, 0.18);
+  color: #935f00;
+}
+
+.card-danger .card-icon {
+  background-color: rgba(230, 57, 70, 0.18);
+  color: var(--cor-perigo);
+}
+
+/* CARDS COMPACTOS (ex.: listagens dentro de outra tela) */
+
+.card-compact {
+  padding: 10px 12px;
+  gap: 6px;
+}
+
+.card-compact .card-title {
+  font-size: 14px;
+}
+
+.card-compact .card-subtitle {
+  font-size: 11px;
+}
+
+/* RESPONSIVIDADE BÁSICA */
+
+@media (max-width: 768px) {
+  .card {
+    padding: 12px;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}

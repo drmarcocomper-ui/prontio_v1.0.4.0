@@ -1,0 +1,305 @@
+/* ===========================
+   Sidebar PRONTIO - nível produto
+   - Navegação lateral
+   - Tema claro/escuro (variáveis locais)
+   - Modo compacto
+   - Modo drawer (mobile)
+=========================== */
+
+/* Tokens específicos da sidebar
+   (podem ser promovidos para tokens.css se forem reutilizados) */
+:root {
+  --sidebar-width: 260px;
+  --sidebar-bg: #020617;            /* slate-950 */
+  --sidebar-border: #111827;        /* gray-900 */
+  --sidebar-text: #e5e7eb;          /* gray-200 */
+  --sidebar-text-muted: #9ca3af;    /* gray-400 */
+  --sidebar-accent: #3b82f6;        /* blue-500 */
+  --sidebar-hover-bg: rgba(148, 163, 184, 0.16);
+  --sidebar-active-bg: rgba(59, 130, 246, 0.22);
+}
+
+/* Tema claro/escuro via data-theme no body */
+body[data-theme="light"] {
+  --sidebar-bg: #f9fafb;
+  --sidebar-border: #e5e7eb;
+  --sidebar-text: #111827;
+  --sidebar-text-muted: #6b7280;
+  --sidebar-hover-bg: rgba(15, 23, 42, 0.04);
+  --sidebar-active-bg: rgba(37, 99, 235, 0.12);
+}
+
+body[data-theme="dark"] {
+  --sidebar-bg: #020617;
+  --sidebar-border: #111827;
+  --sidebar-text: #e5e7eb;
+  --sidebar-text-muted: #9ca3af;
+  --sidebar-hover-bg: rgba(148, 163, 184, 0.16);
+  --sidebar-active-bg: rgba(59, 130, 246, 0.22);
+}
+
+/* ===========================
+   CONTAINER GERAL DA SIDEBAR
+=========================== */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  padding: 12px 10px;
+  box-sizing: border-box;
+  font-size: 14px;
+  transition:
+    width 0.18s ease,
+    padding 0.18s ease,
+    transform 0.18s ease;
+}
+
+/* ===========================
+   HEADER DA SIDEBAR
+=========================== */
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.app-logo {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: 16px;
+}
+
+.app-version {
+  font-size: 11px;
+  color: var(--sidebar-text-muted);
+  text-align: right;
+}
+
+/* Ações no header (compact + theme) */
+.sidebar-header-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+/* Botão de ícone genérico (pode ser reaproveitado em topbar, se quiser) */
+.icon-button {
+  border: none;
+  background: transparent;
+  padding: 4px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sidebar-text-muted);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.icon-button:hover {
+  background: var(--sidebar-hover-bg);
+  color: var(--sidebar-text);
+}
+
+.icon-button:active {
+  transform: scale(0.96);
+}
+
+.icon-svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* ===========================
+   NAVEGAÇÃO
+=========================== */
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: auto; /* empurra footer pra baixo */
+  margin-top: 4px;
+}
+
+/* TODOS os links dentro da sidebar (menu principal + Configurações) */
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--sidebar-text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.05s ease;
+}
+
+.sidebar .nav-link .icon {
+  width: 22px;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar .nav-link .label {
+  white-space: nowrap;
+  display: inline-block;
+}
+
+/* Hover */
+.sidebar .nav-link:hover {
+  background: var(--sidebar-hover-bg);
+  color: var(--sidebar-text);
+}
+
+/* Ativo */
+.sidebar .nav-link.active,
+.sidebar .nav-link[aria-current="page"] {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-accent);
+  font-weight: 600;
+}
+
+/* Link de Configurações: estilo especial (fica no footer no HTML) */
+.sidebar .nav-link-config {
+  margin-top: 6px;
+}
+
+/* ===========================
+   RODAPÉ DA SIDEBAR
+=========================== */
+
+.sidebar-footer {
+  margin-top: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--sidebar-border);
+  font-size: 11px;
+  color: var(--sidebar-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-user {
+  opacity: 0.9;
+}
+
+.sidebar-year {
+  opacity: 0.8;
+}
+
+/* ===========================
+   MODO COMPACTO (DESKTOP)
+   aplicado via body.sidebar-compact
+=========================== */
+
+body.sidebar-compact .sidebar {
+  width: 72px;
+  padding-inline: 8px;
+}
+
+body.sidebar-compact .sidebar .app-logo {
+  text-align: center;
+}
+
+body.sidebar-compact .sidebar .app-version {
+  display: none;
+}
+
+/* Todos os links em compacto */
+body.sidebar-compact .sidebar .nav-link {
+  justify-content: center;
+  padding-inline: 8px;
+}
+
+body.sidebar-compact .sidebar .nav-link .label {
+  display: none;
+}
+
+body.sidebar-compact .sidebar-footer {
+  align-items: center;
+  text-align: center;
+}
+
+body.sidebar-compact .sidebar-footer .sidebar-user {
+  display: none;
+}
+
+/* ===========================
+   BACKDROP (para mobile drawer)
+=========================== */
+
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ===========================
+   RESPONSIVIDADE / DRAWER MOBILE
+   (até 900px)
+=========================== */
+
+@media (max-width: 900px) {
+  /* Sidebar vira drawer: começa escondida à esquerda */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    z-index: 40;
+    box-shadow: 2px 0 12px rgba(15, 23, 42, 0.8);
+  }
+
+  /* Quando body.sidebar-open, o drawer aparece */
+  body.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  /* Em mobile, ignoramos o conceito de "compacto"
+     (menu recolhido é mais para desktop) */
+  body.sidebar-compact .sidebar {
+    width: var(--sidebar-width);
+  }
+
+  /* Backdrop por trás do drawer */
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+    z-index: 30;
+  }
+
+  body.sidebar-open .sidebar-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Em telas pequenas, labels podem aparecer
+     mesmo que body.sidebar-compact exista */
+  body.sidebar-compact .sidebar .nav-link .label {
+    display: inline-block;
+  }
+}

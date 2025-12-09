@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>PRONTIO - Prontuário</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- CSS específico do prontuário (ajustes de layout e timeline) -->
+  <link rel="stylesheet" href="assets/css/prontuario.css">
+</head>
+
+<body 
+  data-page-id="prontuario" 
+  data-subtitle="Registro clínico e evoluções do paciente"
+  data-tag="Prontuário"
+  data-context="Prontuário"
+>
+  <div class="app-shell">
+    <!-- SIDEBAR / MENU LATERAL -->
+    <aside id="sidebar" class="sidebar" data-component="sidebar">
+      <div class="sidebar-header">
+        <div class="app-logo">PRONTIO</div>
+        <div class="app-version" id="appVersion">v1.0.3</div>
+
+        <div class="sidebar-header-actions">
+          <button
+            type="button"
+            class="icon-button js-toggle-compact"
+            aria-label="Alternar modo compacto da barra lateral"
+            aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M4 5h16v2H4V5zm0 6h10v2H4v-2zm0 6h16v2H4v-2z"
+                fill="currentColor" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="icon-button js-toggle-theme"
+            aria-label="Alternar tema claro/escuro"
+            aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg js-theme-icon-sun">
+              <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+              <g stroke="currentColor" stroke-width="1.5">
+                <line x1="12" y1="2" x2="12" y2="5"></line>
+                <line x1="12" y1="19" x2="12" y2="22"></line>
+                <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"></line>
+                <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"></line>
+                <line x1="2" y1="12" x2="5" y2="12"></line>
+                <line x1="19" y1="12" x2="22" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"></line>
+                <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"></line>
+              </g>
+            </svg>
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              class="icon-svg js-theme-icon-moon"
+              style="display:none"
+            >
+              <path
+                d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 1 0 21 12.79z"
+                fill="currentColor">
+              </path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebarNav" aria-label="Navegação principal">
+        <a href="index.html" class="nav-link" data-page-id="index">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Início</span>
+        </a>
+
+        <a href="pacientes.html" class="nav-link" data-page-id="pacientes">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-7 2-7 4.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1.5C19 16 16 14 12 14z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Pacientes</span>
+        </a>
+
+        <a href="agenda.html" class="nav-link" data-page-id="agenda">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 2a1 1 0 0 0-1 1v1H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1V3a1 1 0 0 0-2 0v1H9V3A1 1 0 0 0 8 2zM5 9h14v9H5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Agenda</span>
+        </a>
+
+        <a href="prontuario.html" class="nav-link is-active" data-page-id="prontuario">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5L14.5 3zM14 4.5 18.5 9H14z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Prontuário</span>
+        </a>
+
+        <a href="evolucao.html" class="nav-link" data-page-id="evolucao">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M5 4a2 2 0 0 0-2 2v12a1 1 0 0 0 1 1h10.5L21 12.5V6a2 2 0 0 0-2-2zm2 3h10v2H7zm0 4h6v2H7z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Evolução</span>
+        </a>
+
+        <a href="receita.html" class="nav-link" data-page-id="receita">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14a1 1 0 0 0 1 1h7v-2H7V5h10v4h2V5a2 2 0 0 0-2-2zm7.5 8-3.5 3.5 1.5 1.5L16 13.5l1.5 1.5L19 13.5 16.5 11z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Receita</span>
+        </a>
+
+        <a href="exames.html" class="nav-link" data-page-id="exames">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14h2v-4h10v4h2V5a2 2 0 0 0-2-2zm0 10V5h10v8z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Exames</span>
+        </a>
+
+        <a href="laudo.html" class="nav-link" data-page-id="laudo">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M6 3a2 2 0 0 0-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 0 0-2-2z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Laudos</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="configuracoes.html" class="nav-link nav-link-config" data-page-id="configuracoes">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M19.14 12.94a7.07 7.07 0 0 0 .05-.94 7.07 7.07 0 0 0-.05-.94l2-1.53a.5.5 0 0 0 .12-.64l-1.9-3.29a.5.5 0 0 0-.61-.22l-2.35.94a7 7 0 0 0-1.63-.94l-.36-2.5A.5.5 0 0 0 13.91 2h-3.82a.5.5 0 0 0-.49.42l-.36 2.5a7 7 0 0 0-1.63.94l-2.35-.94a.5.5 0 0 0-.61.22L2.75 8.37a.5.5 0 0 0 .12.64l2 1.53A7.07 7.07 0 0 0 4.82 12c0 .32.02.63.05.94l-2 1.53a.5.5 0 0 0-.12.64l1.9 3.29a.5.5 0 0 0 .61.22l2.35-.94a7 7 0 0 0 1.63.94l.36 2.5a.5.5 0 0 0 .49.42h3.82a.5.5 0 0 0 .49-.42l.36-2.5a7 7 0 0 0 1.63-.94l2.35.94a.5.5 0 0 0 .61-.22l1.9-3.29a.5.5 0 0 0-.12-.64zm-7.14 2.56A3.5 3.5 0 1 1 15.5 12a3.5 3.5 0 0 1-3.5 3.5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Configurações</span>
+        </a>
+
+        <small class="sidebar-user" id="sidebarUser"></small>
+        <span class="sidebar-year">
+          &copy; <span id="anoAtualSidebar"></span> PRONTIO
+        </span>
+      </div>
+    </aside>
+
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+
+    <main class="main-area">
+      <header class="topbar" data-component="topbar">
+        <div class="topbar-col-left">
+          <div class="topbar-left-header">
+            <button
+              type="button"
+              class="icon-button topbar-menu-button js-toggle-sidebar"
+              aria-label="Abrir menu de navegação">
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+                <path
+                  d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"
+                  fill="currentColor" />
+              </svg>
+            </button>
+
+            <div id="topbar-breadcrumb" class="topbar-breadcrumb"></div>
+          </div>
+
+          <div class="topbar-title-main">
+            <h1 id="topbar-title-text">Prontuário</h1>
+            <span id="topbar-tag" class="topbar-tag">Registro clínico</span>
+          </div>
+
+          <p id="topbar-subtitle" class="topbar-subtitle">
+            Registro clínico e evoluções do paciente.
+          </p>
+        </div>
+
+        <div class="topbar-col-right">
+          <div class="topbar-meta">
+            <span id="topbar-meta-date" class="topbar-meta-item"></span>
+            <span id="topbar-meta-context" class="topbar-meta-item"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- LAYOUT CENTRAL DO PRONTUÁRIO -->
+      <section class="content content-prontuario">
+
+        <!-- CARD: IDENTIFICAÇÃO DO PACIENTE -->
+        <section class="card card-prontuario card-paciente">
+          <div class="card-header card-header-tight">
+            <h2>Paciente e atendimento</h2>
+            <span class="card-subtitle">Identificação e contexto clínico atual</span>
+          </div>
+          <div class="card-body card-body-compact">
+            <div class="prontuario-paciente-header">
+              <div class="prontuario-paciente-info">
+                <div class="paciente-nome-linha">
+                  <span class="label">Paciente</span>
+                  <span id="prontuario-paciente-nome" class="paciente-nome">Paciente</span>
+                </div>
+                <div class="paciente-id-linha">
+                  <span class="texto-menor">
+                    ID Paciente:
+                    <span id="prontuario-paciente-id">—</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2 mt-md prontuario-atendimento-grid">
+              <div>
+                <div class="campo-inline">
+                  <span class="campo-label">Data da consulta</span>
+                  <span id="info-agenda-data" class="campo-valor">—</span>
+                </div>
+                <div class="campo-inline">
+                  <span class="campo-label">Hora</span>
+                  <span id="info-agenda-hora" class="campo-valor">—</span>
+                </div>
+              </div>
+              <div>
+                <div class="campo-inline">
+                  <span class="campo-label">Status</span>
+                  <span id="info-agenda-status" class="campo-valor">—</span>
+                </div>
+                <div class="campo-inline">
+                  <span class="campo-label">ID Agenda</span>
+                  <span id="info-agenda-id" class="campo-valor">—</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="msg-menor mt-sm texto-suave">
+              Quando o prontuário é aberto a partir da <strong>Agenda</strong>, estes dados
+              são preenchidos automaticamente usando o ID_Agenda e o ID_Paciente.
+            </p>
+          </div>
+        </section>
+
+        <!-- CARD: NOVA EVOLUÇÃO -->
+        <section class="card card-prontuario">
+          <div class="card-header card-header-tight">
+            <div>
+              <h2>Nova evolução clínica</h2>
+              <span class="card-subtitle">
+                Registre a evolução mais recente deste paciente. Você pode usar a última evolução como modelo.
+              </span>
+            </div>
+          </div>
+          <div class="card-body">
+            <form id="formEvolucao" class="form-vertical">
+              <div class="form-row">
+                <label for="textoEvolucao">Registro clínico</label>
+                <textarea id="textoEvolucao" rows="7" required placeholder="Descreva o motivo da consulta, exame físico, hipóteses diagnósticas e condutas..."></textarea>
+              </div>
+              <div class="form-row form-row-actions form-row-actions-inline">
+                <button type="submit" class="btn primario">Salvar evolução</button>
+                <button 
+                  type="button" 
+                  id="btnNovaReceita" 
+                  class="btn secundario">
+                  Ir para nova receita
+                </button>
+              </div>
+            </form>
+            <div id="mensagemEvolucao" class="mensagem is-hidden"></div>
+          </div>
+        </section>
+
+        <!-- CARD: HISTÓRICO GLOBAL DO PACIENTE -->
+        <section class="card card-prontuario" id="secHistoricoPaciente">
+          <div class="card-header card-header-tight">
+            <div>
+              <h2>Histórico global do paciente</h2>
+              <span class="card-subtitle">
+                A última evolução é exibida abaixo. Clique em <strong>Carregar histórico completo</strong> para visualizar todas.
+              </span>
+            </div>
+            <button id="btnCarregarHistoricoPaciente" class="btn secundario btn-sm">
+              Carregar histórico completo
+            </button>
+          </div>
+          <div class="card-body card-body-compact">
+            <p class="msg-menor" id="listaEvolucoesPacienteVazia">
+              Carregando última evolução clínica...
+            </p>
+
+            <ul id="listaEvolucoesPaciente" class="lista-evolucoes prontuario-timeline mt-md">
+              <!-- preenchido via JS -->
+            </ul>
+          </div>
+        </section>
+
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

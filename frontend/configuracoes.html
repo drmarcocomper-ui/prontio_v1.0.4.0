@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>PRONTIO - Configurações</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Mantendo seu CSS atual unificado -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body
+  data-page-id="configuracoes"
+  data-subtitle="Dados do médico, da clínica e preferências da agenda"
+  data-tag="Sistema"
+  data-context="Configurações"
+>
+  <div class="app-shell">
+    <!-- SIDEBAR / MENU LATERAL (profissional) -->
+    <aside id="sidebar" class="sidebar" data-component="sidebar">
+      <div class="sidebar-header">
+        <div class="app-logo">PRONTIO</div>
+        <div class="app-version" id="appVersion">v1.0.3</div>
+
+        <div class="sidebar-header-actions">
+          <!-- Botão: modo compacto -->
+          <button
+            type="button"
+            class="icon-button js-toggle-compact"
+            aria-label="Alternar modo compacto da barra lateral"
+            aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M4 5h16v2H4V5zm0 6h10v2H4v-2zm0 6h16v2H4v-2z"
+                fill="currentColor" />
+            </svg>
+          </button>
+
+          <!-- Botão: tema claro/escuro -->
+          <button
+            type="button"
+            class="icon-button js-toggle-theme"
+            aria-label="Alternar modo claro/escuro"
+            aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg js-theme-icon-sun">
+              <!-- Sol -->
+              <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+              <g stroke="currentColor" stroke-width="1.5">
+                <line x1="12" y1="2" x2="12" y2="5"></line>
+                <line x1="12" y1="19" x2="12" y2="22"></line>
+                <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"></line>
+                <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"></line>
+                <line x1="2" y1="12" x2="5" y2="12"></line>
+                <line x1="19" y1="12" x2="22" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"></line>
+                <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"></line>
+              </g>
+            </svg>
+
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg js-theme-icon-moon">
+              <!-- Lua -->
+              <path
+                d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 1 0 21 12.79z"
+                fill="currentColor"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebarNav" aria-label="Navegação principal">
+        <a href="index.html" class="nav-link" data-page-id="index">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Início</span>
+        </a>
+
+        <a href="pacientes.html" class="nav-link" data-page-id="pacientes">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-7 2-7 4.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1.5C19 16 16 14 12 14z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Pacientes</span>
+        </a>
+
+        <a href="agenda.html" class="nav-link" data-page-id="agenda">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 2a1 1 0 0 0-1 1v1H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1V3a1 1 0 0 0-2 0v1H9V3A1 1 0 0 0 8 2zM5 9h14v9H5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Agenda</span>
+        </a>
+
+        <a href="prontuario.html" class="nav-link" data-page-id="prontuario">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5L14.5 3zM14 4.5 18.5 9H14z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Prontuário</span>
+        </a>
+
+        <a href="evolucao.html" class="nav-link" data-page-id="evolucao">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M5 4a2 2 0 0 0-2 2v12a1 1 0 0 0 1 1h10.5L21 12.5V6a2 2 0 0 0-2-2zm2 3h10v2H7zm0 4h6v2H7z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Evolução</span>
+        </a>
+
+        <a href="receita.html" class="nav-link" data-page-id="receita">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14a1 1 0 0 0 1 1h7v-2H7V5h10v4h2V5a2 2 0 0 0-2-2zm7.5 8-3.5 3.5 1.5 1.5L16 13.5l1.5 1.5L19 13.5 16.5 11z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Receita</span>
+        </a>
+
+        <a href="exames.html" class="nav-link" data-page-id="exames">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14h2v-4h10v4h2V5a2 2 0 0 0-2-2zm0 10V5h10v8z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Exames</span>
+        </a>
+
+        <a href="laudo.html" class="nav-link" data-page-id="laudo">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M6 3a2 2 0 0 0-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 0 0-2-2z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Laudos</span>
+        </a>
+
+        <!-- Configurações: sempre no final do menu -->
+        <a href="configuracoes.html" class="nav-link nav-link-config" data-page-id="configuracoes">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M19.14 12.94a7.07 7.07 0 0 0 .05-.94 7.07 7.07 0 0 0-.05-.94l2-1.53a.5.5 0 0 0 .12-.64l-1.9-3.29a.5.5 0 0 0-.61-.22l-2.35.94a7 7 0 0 0-1.63-.94l-.36-2.5A.5.5 0 0 0 13.91 2h-3.82a.5.5 0 0 0-.49.42l-.36 2.5a7 7 0 0 0-1.63.94l-2.35-.94a.5.5 0 0 0-.61.22L2.75 8.37a.5.5 0 0 0 .12.64l2 1.53A7.07 7.07 0 0 0 4.82 12c0 .32.02.63.05.94l-2 1.53a.5.5 0 0 0-.12.64l1.9 3.29a.5.5 0 0 0 .61.22l2.35-.94a7 7 0 0 0 1.63.94l.36 2.5a.5.5 0 0 0 .49.42h3.82a.5.5 0 0 0 .49-.42l.36-2.5a7 7 0 0 0 1.63-.94l2.35.94a.5.5 0 0 0 .61-.22l1.9-3.29a.5.5 0 0 0-.12-.64zm-7.14 2.56A3.5 3.5 0 1 1 15.5 12a3.5 3.5 0 0 1-3.5 3.5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Configurações</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <small class="sidebar-user" id="sidebarUser"></small>
+        <span class="sidebar-year">
+          &copy; <span id="anoAtualSidebar"></span> PRONTIO
+        </span>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="main-area">
+      <!-- TOPBAR PADRÃO (novo layout, preenchido) -->
+      <header class="topbar" data-component="topbar">
+        <div class="topbar-col-left">
+          <div class="topbar-left-header">
+            <!-- Botão de abrir/fechar sidebar no mobile -->
+            <button
+              type="button"
+              class="icon-button topbar-menu-button js-toggle-sidebar"
+              aria-label="Abrir menu de navegação">
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+                <path
+                  d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"
+                  fill="currentColor" />
+              </svg>
+            </button>
+
+            <div id="topbar-breadcrumb" class="topbar-breadcrumb"></div>
+          </div>
+
+          <div class="topbar-title-main">
+            <h1 id="topbar-title-text">Configurações</h1>
+            <span id="topbar-tag" class="topbar-tag">Sistema</span>
+          </div>
+
+          <p id="topbar-subtitle" class="topbar-subtitle">
+            Dados do médico, da clínica e preferências da agenda.
+          </p>
+        </div>
+
+        <div class="topbar-col-right">
+          <div class="topbar-meta">
+            <span id="topbar-meta-date" class="topbar-meta-item"></span>
+            <span id="topbar-meta-context" class="topbar-meta-item"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTEÚDO -->
+      <section class="content">
+        <!-- MENSAGEM GLOBAL -->
+        <div
+          id="mensagemConfig"
+          class="mensagem"
+          style="display:none;"
+          role="alert"
+          aria-live="polite"
+        >
+          <!-- Preenchido via JS -->
+        </div>
+
+        <!-- FORMULÁRIO PRINCIPAL -->
+        <form id="formConfiguracoes" novalidate>
+          <!-- CARD: DADOS DO MÉDICO -->
+          <section class="card" aria-labelledby="sec-medico-titulo">
+            <div class="card-header">
+              <h2 id="sec-medico-titulo" class="secao-config-titulo">Dados do médico</h2>
+              <p class="secao-config-subtitulo">
+                Estas informações aparecem em receitas, laudos e atestados emitidos pelo sistema.
+              </p>
+            </div>
+
+            <div class="form-config-grid">
+              <div class="campo-controle col-span-2">
+                <label for="medicoNomeCompleto" class="campo-label">Nome completo *</label>
+                <input type="text" id="medicoNomeCompleto" autocomplete="name" required>
+                <div class="campo-ajuda">
+                  Será exibido nos documentos (receitas, laudos, atestados).
+                </div>
+              </div>
+
+              <div class="campo-controle">
+                <label for="medicoCRM" class="campo-label">CRM *</label>
+                <input type="text" id="medicoCRM" placeholder="CRM 000000 / UF" required>
+                <div class="campo-ajuda">
+                  Informe número e UF, por exemplo: CRM 000000 / RS.
+                </div>
+              </div>
+
+              <div class="campo-controle">
+                <label for="medicoEspecialidade" class="campo-label">Especialidade</label>
+                <input type="text" id="medicoEspecialidade" placeholder="Ex.: Ortopedia, Psiquiatria">
+              </div>
+            </div>
+          </section>
+
+          <!-- CARD: DADOS DA CLÍNICA -->
+          <section class="card" aria-labelledby="sec-clinica-titulo">
+            <div class="card-header">
+              <h2 id="sec-clinica-titulo" class="secao-config-titulo">Dados da clínica / consultório</h2>
+              <p class="secao-config-subtitulo">
+                Informações de cabeçalho usadas nos documentos gerados pelo PRONTIO.
+              </p>
+            </div>
+
+            <div class="form-config-grid">
+              <div class="campo-controle col-span-2">
+                <label for="clinicaNome" class="campo-label">Nome da clínica / consultório</label>
+                <input type="text" id="clinicaNome" placeholder="Nome fantasia ou razão social">
+              </div>
+
+              <div class="campo-controle col-span-2">
+                <label for="clinicaEndereco" class="campo-label">Endereço</label>
+                <textarea id="clinicaEndereco" rows="2" placeholder="Rua, número, complemento, bairro, cidade - UF"></textarea>
+                <div class="campo-ajuda">
+                  Será mostrado em receitas e laudos; você pode incluir CEP se desejar.
+                </div>
+              </div>
+
+              <div class="campo-controle">
+                <label for="clinicaTelefone" class="campo-label">Telefone / WhatsApp</label>
+                <input type="tel" id="clinicaTelefone" placeholder="(00) 00000-0000">
+              </div>
+
+              <div class="campo-controle">
+                <label for="clinicaEmail" class="campo-label">E-mail</label>
+                <input type="email" id="clinicaEmail" placeholder="contato@clinica.com.br">
+              </div>
+            </div>
+          </section>
+
+          <!-- CARD: IDENTIDADE VISUAL -->
+          <section class="card" aria-labelledby="sec-identidade-titulo">
+            <div class="card-header">
+              <h2 id="sec-identidade-titulo" class="secao-config-titulo">Identidade visual</h2>
+              <p class="secao-config-subtitulo">
+                Configure o logo que será exibido nos documentos em PDF (receitas, laudos, etc.).
+              </p>
+            </div>
+
+            <div class="form-config-grid">
+              <div class="campo-controle col-span-2">
+                <label for="clinicaLogoUrl" class="campo-label">URL do logo da clínica</label>
+                <input
+                  type="url"
+                  id="clinicaLogoUrl"
+                  placeholder="https://exemplo.com/logo.png">
+                <div class="campo-ajuda">
+                  Use um link direto para a imagem (PNG ou JPG). Este logo será exibido no topo das receitas e laudos.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- CARD: PREFERÊNCIAS DA AGENDA -->
+          <section class="card" aria-labelledby="sec-agenda-titulo">
+            <div class="card-header">
+              <h2 id="sec-agenda-titulo" class="secao-config-titulo">Preferências da agenda</h2>
+              <p class="secao-config-subtitulo">
+                Estes parâmetros serão usados pela agenda do PRONTIO para criar os horários padrão.
+              </p>
+            </div>
+
+            <div class="form-config-grid">
+              <div class="campo-controle">
+                <label for="agendaHoraInicioPadrao" class="campo-label">Horário inicial padrão</label>
+                <input type="time" id="agendaHoraInicioPadrao">
+                <div class="campo-ajuda">Ex.: 08:00</div>
+              </div>
+
+              <div class="campo-controle">
+                <label for="agendaHoraFimPadrao" class="campo-label">Horário final padrão</label>
+                <input type="time" id="agendaHoraFimPadrao">
+                <div class="campo-ajuda">Ex.: 18:00</div>
+              </div>
+
+              <div class="campo-controle">
+                <label for="agendaIntervaloMinutos" class="campo-label">Duração padrão da consulta (min)</label>
+                <input
+                  type="number"
+                  id="agendaIntervaloMinutos"
+                  min="5"
+                  step="5"
+                  placeholder="30">
+                <div class="campo-ajuda">
+                  Ex.: 20, 30, 40 minutos por consulta.
+                </div>
+              </div>
+
+              <div class="campo-controle col-span-2">
+                <label class="campo-label">Dias da semana ativos</label>
+                <div class="grupo-radio-inline">
+                  <label><input type="checkbox" class="chk-dia-ativo" value="SEG"> Seg</label>
+                  <label><input type="checkbox" class="chk-dia-ativo" value="TER"> Ter</label>
+                  <label><input type="checkbox" class="chk-dia-ativo" value="QUA"> Qua</label>
+                  <label><input type="checkbox" class="chk-dia-ativo" value="QUI"> Qui</label>
+                  <label><input type="checkbox" class="chk-dia-ativo" value="SEX"> Sex</label>
+                  <label><input type="checkbox" class="chk-dia-ativo" value="SAB"> Sáb</label>
+                  <label><input type="checkbox" class="chk-dia-ativo" value="DOM"> Dom</label>
+                </div>
+                <div class="campo-ajuda">
+                  Usado futuramente para agenda semanal / bloqueio automático de dias não atendidos.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- AÇÕES GERAIS -->
+          <section class="card">
+            <div class="acoes-config">
+              <button type="submit" class="btn primario">
+                Salvar configurações
+              </button>
+              <button type="button" id="btnRecarregarConfig" class="btn secundario">
+                Recarregar do servidor
+              </button>
+              <span style="font-size: 11px; color:#666;">
+                Os dados são salvos diretamente na planilha de configurações do PRONTIO.
+              </span>
+            </div>
+          </section>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

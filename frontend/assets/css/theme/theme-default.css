@@ -1,0 +1,203 @@
+/* =========================================
+   PRONTIO - Theme Default (light)
+   Aplicado quando <body data-theme="light">
+   ========================================= */
+
+:root {
+  /* Paleta base – pode ser usada por outros módulos */
+  --app-brand: #2563eb;
+  --app-brand-soft: rgba(37, 99, 235, 0.12);
+  --app-bg-body: #f3f4f6;
+  --app-bg-shell: #e5e7eb;
+  --app-bg-surface: #ffffff;
+  --app-bg-surface-alt: #f9fafb;
+  --app-border-subtle: #e5e7eb;
+  --app-border-strong: #cbd5f5;
+  --app-text-primary: #0f172a;
+  --app-text-muted: #6b7280;
+  --app-text-softer: #9ca3af;
+}
+
+/* Corpo da aplicação */
+body[data-theme="light"] {
+  background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 40%, #dde5ff 100%);
+  color: var(--app-text-primary);
+}
+
+/* Shell geral (área da direita) */
+body[data-theme="light"] .main-area {
+  background: transparent;
+}
+
+/* SIDEBAR ------------------------------------------------ */
+
+body[data-theme="light"] .sidebar {
+  background: #ffffff;
+  border-right: 1px solid var(--app-border-subtle);
+  box-shadow: 4px 0 22px rgba(15, 23, 42, 0.06);
+}
+
+body[data-theme="light"] .sidebar-header {
+  border-bottom: 1px solid rgba(229, 231, 235, 0.9);
+}
+
+body[data-theme="light"] .app-logo {
+  color: var(--app-brand);
+}
+
+body[data-theme="light"] .app-version {
+  color: var(--app-text-softer);
+}
+
+body[data-theme="light"] .sidebar-nav .nav-link {
+  color: #4b5563;
+}
+
+body[data-theme="light"] .sidebar-nav .nav-link .icon-svg {
+  color: #9ca3af;
+}
+
+body[data-theme="light"] .sidebar-nav .nav-link:hover {
+  background: #f3f4ff;
+  color: #1f2937;
+}
+
+body[data-theme="light"] .sidebar-nav .nav-link.is-active,
+body[data-theme="light"] .sidebar-nav .nav-link[data-active="true"] {
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+}
+
+body[data-theme="light"] .sidebar-nav .nav-link.is-active .icon-svg,
+body[data-theme="light"] .sidebar-nav .nav-link[data-active="true"] .icon-svg {
+  color: #1d4ed8;
+}
+
+body[data-theme="light"] .sidebar-footer {
+  border-top: 1px solid var(--app-border-subtle);
+  color: var(--app-text-softer);
+}
+
+/* TOPBAR ------------------------------------------------- */
+
+body[data-theme="light"] .topbar {
+  background: linear-gradient(135deg, #111827 0%, #1f2937 60%, #0f172a 100%);
+  color: #f9fafb;
+  border-bottom: none;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.45);
+}
+
+body[data-theme="light"] .topbar-title-main h1 {
+  color: #e5e7eb;
+}
+
+body[data-theme="light"] .topbar-subtitle {
+  color: #9ca3af;
+}
+
+body[data-theme="light"] .topbar-breadcrumb {
+  color: #e5e7eb;
+}
+
+body[data-theme="light"] .topbar-meta-item {
+  color: #e5e7eb;
+}
+
+/* CONTEÚDO / CARDS -------------------------------------- */
+
+body[data-theme="light"] .content {
+  /* o fundo geral já vem do body; aqui só garantimos contraste */
+  color: var(--app-text-primary);
+}
+
+body[data-theme="light"] .card {
+  background: var(--app-bg-surface);
+  border-radius: 14px;
+  border: 1px solid var(--app-border-subtle);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+body[data-theme="light"] .card-header {
+  border-bottom: 1px solid rgba(229, 231, 235, 0.9);
+}
+
+body[data-theme="light"] .card-header h2 {
+  color: var(--app-text-primary);
+}
+
+body[data-theme="light"] .card-body {
+  background: var(--app-bg-surface);
+}
+
+body[data-theme="light"] .msg-menor {
+  color: var(--app-text-softer);
+}
+
+/* Tabelas / listas básicas ------------------------------ */
+
+body[data-theme="light"] table {
+  background: #ffffff;
+  border-color: #e5e7eb;
+}
+
+body[data-theme="light"] th {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+body[data-theme="light"] td {
+  border-color: #e5e7eb;
+}
+
+/* BOTÕES ------------------------------------------------ */
+
+body[data-theme="light"] .btn.primario {
+  background: var(--app-brand);
+  border-color: var(--app-brand);
+  color: #eff6ff;
+}
+
+body[data-theme="light"] .btn.primario:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+body[data-theme="light"] .btn.secundario {
+  background: #ffffff;
+  border-color: #cbd5f5;
+  color: #1d4ed8;
+}
+
+body[data-theme="light"] .btn.secundario:hover {
+  background: #e0edff;
+}
+
+/* Ícones de tema (sol/lua) */
+
+body[data-theme="light"] .js-toggle-theme .js-theme-icon-sun {
+  color: #facc15;
+}
+
+body[data-theme="light"] .js-toggle-theme .js-theme-icon-moon {
+  color: #4b5563;
+}
+
+/* PRONTUÁRIO – pequenas harmonizações ------------------- */
+
+body[data-theme="light"] .card-prontuario {
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 60%),
+    #ffffff;
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+body[data-theme="light"] .prontuario-timeline .evolucao-item {
+  background: #ffffff;
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+body[data-theme="light"] .prontuario-timeline .evolucao-item:first-child {
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.09), transparent 70%),
+    #ffffff;
+}

@@ -1,0 +1,229 @@
+/* ===========================================
+   PRONTIO - CSS específico da página Evolução
+=========================================== */
+
+/* Subtítulo no topo mostrando paciente */
+.topbar-paciente {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Mensagem geral da tela (container) */
+#mensagemEvolucao {
+  margin-bottom: 16px;
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: #f5f5f5;
+}
+
+/* Variações de mensagem (info / sucesso / erro) – escopadas ao #mensagemEvolucao */
+#mensagemEvolucao.mensagem-info {
+  color: #0d47a1;
+  border-color: #bbdefb;
+  background: #e3f2fd;
+}
+
+#mensagemEvolucao.mensagem-sucesso {
+  color: #2e7d32;
+  border-color: #c8e6c9;
+  background: #e8f5e9;
+}
+
+#mensagemEvolucao.mensagem-erro {
+  color: #c62828;
+  border-color: #ffcdd2;
+  background: #ffebee;
+}
+
+/* GRID formulário (data/tipo etc – hoje só texto, mas mantido para consistência) */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Campos de formulário (texto evolução) */
+.campo-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.campo-form label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #444;
+}
+
+.campo-form input,
+.campo-form select,
+.campo-form textarea {
+  padding: 6px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.campo-form input:focus,
+.campo-form select:focus,
+.campo-form textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+}
+
+.campo-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Ações do formulário (botões salvar/limpar) */
+.acoes-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+/* Tabela de evoluções (histórico) */
+.tabela-evolucoes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabela-evolucoes th,
+.tabela-evolucoes td {
+  border: 1px solid #e0e0e0;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.tabela-evolucoes th {
+  background: #f5f5f5;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tabela-evolucoes tr:nth-child(even) td {
+  background: #fafafa;
+}
+
+/* Texto resumo na lista */
+.texto-resumo {
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Filtro local da lista */
+.filtro-evolucoes {
+  margin-bottom: 12px;
+}
+
+.filtro-evolucoes input {
+  width: 100%;
+}
+
+/* Ajustes de header de card APENAS nesta página */
+body[data-page-id="evolucao"] .card-header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+body[data-page-id="evolucao"] .card-header.card-header-lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ===== Modal de visualização de evolução ===== */
+
+.hidden {
+  display: none !important;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-conteudo {
+  background: #ffffff;
+  width: 90%;
+  max-width: 720px;
+  max-height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-body {
+  padding: 12px 18px;
+  overflow-y: auto;
+}
+
+.modal-body p {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.modal-texto {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  background: #f9f9f9;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 14px;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 10px 18px 14px 18px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 800px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Esconde a coluna "Profissional" em telas bem pequenas */
+  .tabela-evolucoes th:nth-child(3),
+  .tabela-evolucoes td:nth-child(3) {
+    display: none;
+  }
+}

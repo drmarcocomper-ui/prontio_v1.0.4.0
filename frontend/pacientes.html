@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>PRONTIO - Pacientes</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Ponto único de estilos -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body
+  data-page-id="pacientes"
+  data-subtitle="Área de cadastro e manutenção de dados pela secretaria."
+  data-tag="Pacientes"
+  data-context="Secretaria"
+>
+  <div class="app-shell">
+    <!-- SIDEBAR / MENU LATERAL (profissional) -->
+    <aside id="sidebar" class="sidebar" data-component="sidebar">
+      <div class="sidebar-header">
+        <div class="app-logo">PRONTIO</div>
+        <div class="app-version" id="appVersion">v1.0.3</div>
+
+        <div class="sidebar-header-actions">
+          <!-- Botão: modo compacto -->
+          <button
+            type="button"
+            class="icon-button js-toggle-compact"
+            aria-label="Alternar modo compacto da barra lateral"
+            aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M4 5h16v2H4V5zm0 6h10v2H4v-2zm0 6h16v2H4v-2z"
+                fill="currentColor" />
+            </svg>
+          </button>
+
+          <!-- Botão: tema claro/escuro -->
+          <button
+            type="button"
+            class="icon-button js-toggle-theme"
+            aria-label="Alternar modo claro/escuro"
+            aria-pressed="false">
+            <!-- Sol -->
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg js-theme-icon-sun">
+              <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+              <g stroke="currentColor" stroke-width="1.5">
+                <line x1="12" y1="2" x2="12" y2="5"></line>
+                <line x1="12" y1="19" x2="12" y2="22"></line>
+                <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"></line>
+                <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"></line>
+                <line x1="2" y1="12" x2="5" y2="12"></line>
+                <line x1="19" y1="12" x2="22" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"></line>
+                <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"></line>
+              </g>
+            </svg>
+
+            <!-- Lua -->
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg js-theme-icon-moon">
+              <path
+                d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 1 0 21 12.79z"
+                fill="currentColor"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebarNav" aria-label="Navegação principal">
+        <a href="index.html" class="nav-link" data-page-id="index">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Início</span>
+        </a>
+
+        <a href="pacientes.html" class="nav-link" data-page-id="pacientes">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-7 2-7 4.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1.5C19 16 16 14 12 14z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Pacientes</span>
+        </a>
+
+        <a href="agenda.html" class="nav-link" data-page-id="agenda">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 2a1 1 0 0 0-1 1v1H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1V3a1 1 0 0 0-2 0v1H9V3A1 1 0 0 0 8 2zM5 9h14v9H5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Agenda</span>
+        </a>
+
+        <a href="prontuario.html" class="nav-link" data-page-id="prontuario">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5L14.5 3zM14 4.5 18.5 9H14z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Prontuário</span>
+        </a>
+
+        <a href="evolucao.html" class="nav-link" data-page-id="evolucao">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M5 4a2 2 0 0 0-2 2v12a1 1 0 0 0 1 1h10.5L21 12.5V6a2 2 0 0 0-2-2zm2 3h10v2H7zm0 4h6v2H7z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Evolução</span>
+        </a>
+
+        <a href="receita.html" class="nav-link" data-page-id="receita">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14a1 1 0 0 0 1 1h7v-2H7V5h10v4h2V5a2 2 0 0 0-2-2zm7.5 8-3.5 3.5 1.5 1.5L16 13.5l1.5 1.5L19 13.5 16.5 11z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Receita</span>
+        </a>
+
+        <a href="exames.html" class="nav-link" data-page-id="exames">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M7 3a2 2 0 0 0-2 2v14h2v-4h10v4h2V5a2 2 0 0 0-2-2zm0 10V5h10v8z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Exames</span>
+        </a>
+
+        <a href="laudo.html" class="nav-link" data-page-id="laudo">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M6 3a2 2 0 0 0-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 0 0-2-2z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Laudos</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <!-- Configurações fixo no rodapé (padrão do layout) -->
+        <a href="configuracoes.html" class="nav-link nav-link-config" data-page-id="configuracoes">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+              <path
+                d="M19.14 12.94a7.07 7.07 0 0 0 .05-.94 7.07 7.07 0 0 0-.05-.94l2-1.53a.5.5 0 0 0 .12-.64l-1.9-3.29a.5.5 0 0 0-.61-.22l-2.35.94a7 7 0 0 0-1.63-.94l-.36-2.5A.5.5 0 0 0 13.91 2h-3.82a.5.5 0 0 0-.49.42l-.36 2.5a7 7 0 0 0-1.63.94l-2.35-.94a.5.5 0 0 0-.61.22L2.75 8.37a.5.5 0 0 0 .12.64l2 1.53A7.07 7.07 0 0 0 4.82 12c0 .32.02.63.05.94l-2 1.53a.5.5 0 0 0-.12.64l1.9 3.29a.5.5 0 0 0 .61.22l2.35-.94a7 7 0 0 0 1.63.94l.36 2.5a.5.5 0 0 0 .49.42h3.82a.5.5 0 0 0 .49-.42l.36-2.5a7 7 0 0 0 1.63-.94l2.35.94a.5.5 0 0 0 .61-.22l1.9-3.29a.5.5 0 0 0-.12-.64zm-7.14 2.56A3.5 3.5 0 1 1 15.5 12a3.5 3.5 0 0 1-3.5 3.5z"
+                fill="currentColor" />
+            </svg>
+          </span>
+          <span class="label">Configurações</span>
+        </a>
+
+        <small class="sidebar-user" id="sidebarUser"></small>
+        <span class="sidebar-year">
+          &copy; <span id="anoAtualSidebar"></span> PRONTIO
+        </span>
+      </div>
+    </aside>
+    
+    <!-- BACKDROP DO SIDEBAR MOBILE -->
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+
+    <!-- ======================
+         ÁREA PRINCIPAL
+    ======================= -->
+    <main class="main-area">
+      <!-- TOPBAR PADRÃO (preenchida, como em index/agenda) -->
+      <header class="topbar" data-component="topbar">
+        <div class="topbar-col-left">
+          <div class="topbar-left-header">
+            <!-- Botão de abrir/fechar sidebar no mobile -->
+            <button
+              type="button"
+              class="icon-button topbar-menu-button js-toggle-sidebar"
+              aria-label="Abrir menu de navegação">
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-svg">
+                <path
+                  d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"
+                  fill="currentColor" />
+              </svg>
+            </button>
+
+            <div id="topbar-breadcrumb" class="topbar-breadcrumb"></div>
+          </div>
+
+          <div class="topbar-title-main">
+            <!-- TEXTO FIXO PARA GARANTIR QUE O TOPO APAREÇA -->
+            <h1 id="topbar-title-text">Pacientes</h1>
+            <span id="topbar-tag" class="topbar-tag">Secretaria</span>
+          </div>
+
+          <p id="topbar-subtitle" class="topbar-subtitle">
+            Área de cadastro e manutenção de dados pela secretaria.
+          </p>
+        </div>
+
+        <div class="topbar-col-right">
+          <div class="topbar-meta">
+            <span id="topbar-meta-date" class="topbar-meta-item"></span>
+            <span id="topbar-meta-context" class="topbar-meta-item"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTEÚDO DA PÁGINA -->
+      <section class="content">
+
+        <!-- MENSAGEM GLOBAL DA PÁGINA -->
+        <div
+          id="mensagem"
+          class="mensagem"
+          style="display:none;"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+        <!-- =============================
+             FICHA DE CADASTRO (COLAPSÁVEL)
+             - Oculta por padrão
+        ================================== -->
+        <section id="secCadastroPaciente" class="card oculto">
+          <div class="card-header">
+            <h2>Novo paciente / Edição</h2>
+            <p class="card-subtitle">
+              Cadastro administrativo: contato, endereço, plano de saúde e observações importantes.
+            </p>
+          </div>
+
+          <form id="formPaciente" class="form-grid" autocomplete="off">
+            <!-- Campo oculto para edição (ID_Paciente) -->
+            <input type="hidden" id="idPaciente" name="idPaciente">
+
+            <!-- DADOS BÁSICOS -->
+            <div class="campo campo-full">
+              <label for="nomeCompleto">Nome completo *</label>
+              <input
+                type="text"
+                id="nomeCompleto"
+                required
+                placeholder="Ex.: João da Silva"
+              >
+            </div>
+
+            <div class="campo">
+              <label for="dataNascimento">Data de nascimento</label>
+              <input type="date" id="dataNascimento">
+            </div>
+
+            <div class="campo">
+              <label for="sexo">Sexo</label>
+              <select id="sexo">
+                <option value="">Selecione...</option>
+                <option value="F">Feminino</option>
+                <option value="M">Masculino</option>
+                <option value="O">Outro / Prefere não informar</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="cpf">CPF</label>
+              <input type="text" id="cpf" maxlength="14" placeholder="000.000.000-00">
+            </div>
+
+            <div class="campo">
+              <label for="rg">RG</label>
+              <input type="text" id="rg" placeholder="RG">
+            </div>
+
+            <!-- CONTATO -->
+            <div class="campo">
+              <label for="telefone1">Telefone 1</label>
+              <input type="tel" id="telefone1" inputmode="tel" placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="campo">
+              <label for="telefone2">Telefone 2</label>
+              <input type="tel" id="telefone2" inputmode="tel" placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="campo campo-full">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" placeholder="exemplo@dominio.com">
+            </div>
+
+            <!-- ENDEREÇO -->
+            <div class="campo">
+              <label for="enderecoBairro">Bairro</label>
+              <input type="text" id="enderecoBairro" placeholder="Bairro">
+            </div>
+
+            <div class="campo">
+              <label for="enderecoCidade">Cidade</label>
+              <input type="text" id="enderecoCidade" placeholder="Cidade">
+            </div>
+
+            <div class="campo">
+              <label for="enderecoUf">UF</label>
+              <input type="text" id="enderecoUf" maxlength="2" placeholder="UF">
+            </div>
+
+            <!-- PLANO DE SAÚDE -->
+            <div class="campo">
+              <label for="planoSaude">Plano de saúde</label>
+              <input type="text" id="planoSaude" placeholder="Ex.: Unimed, Bradesco, Particular...">
+            </div>
+
+            <div class="campo">
+              <label for="numeroCarteirinha">Nº carteirinha</label>
+              <input type="text" id="numeroCarteirinha" placeholder="Número da carteira do plano">
+            </div>
+
+            <!-- OBSERVAÇÕES IMPORTANTES (secretaria) -->
+            <div class="campo campo-full">
+              <label for="obsImportantes">Observações importantes</label>
+              <textarea
+                id="obsImportantes"
+                rows="3"
+                placeholder="Ex.: Contato preferencial, restrições administrativas, observações relevantes..."
+              ></textarea>
+            </div>
+
+            <div class="botoes-form campo-full">
+              <button type="submit" id="btnSalvarPaciente" class="btn primario">
+                Salvar paciente
+              </button>
+              <button type="button" id="btnCancelarEdicao" class="btn secundario oculto">
+                Cancelar edição
+              </button>
+            </div>
+
+            <p class="form-dica campo-full">
+              Dica: após preencher, você pode pressionar <strong>Enter</strong> para salvar.
+            </p>
+          </form>
+        </section>
+
+        <hr class="divisor">
+
+        <!-- =============================
+             LISTA DE PACIENTES
+        ================================== -->
+        <section class="card">
+          <div class="card-header card-header-lista">
+            <div>
+              <h2>Lista de pacientes</h2>
+              <p class="card-subtitle">
+                Clique em um paciente na tabela para selecionar e usar as ações abaixo.
+              </p>
+            </div>
+            <div class="acoes-header-lista">
+              <button id="btnNovoPaciente" class="btn primario">
+                Novo paciente
+              </button>
+              <button id="btnCarregarPacientes" class="btn secundario">
+                Recarregar lista
+              </button>
+            </div>
+          </div>
+
+          <!-- FILTRO + ORDENACAO + COLUNAS EM UMA LINHA LIMPA -->
+          <div class="linha-controles">
+            <div class="bloco-filtro">
+              <label for="filtroTexto">Buscar:</label>
+              <input
+                type="text"
+                id="filtroTexto"
+                placeholder="Nome, CPF, telefone, e-mail..."
+              >
+              <label class="check-ativo">
+                <input type="checkbox" id="chkSomenteAtivos" checked>
+                Mostrar apenas ativos
+              </label>
+            </div>
+
+            <div class="bloco-ordenacao">
+              <label for="selectOrdenacao">Ordenar por:</label>
+              <select id="selectOrdenacao">
+                <option value="dataCadastroDesc">Data de cadastro (mais novos primeiro)</option>
+                <option value="dataCadastroAsc">Data de cadastro (mais antigos primeiro)</option>
+                <option value="nomeAsc">Nome (A–Z)</option>
+                <option value="nomeDesc">Nome (Z–A)</option>
+              </select>
+            </div>
+
+            <div class="bloco-colunas">
+              <button id="btnConfigColunas" type="button" class="btn secundario">
+                Configurar colunas
+              </button>
+            </div>
+          </div>
+
+          <!-- PAINEL SUSPENSO DE COLUNAS -->
+          <div id="painelColunas" class="painel-colunas oculto">
+            <div class="painel-colunas-header">
+              <span>Colunas visíveis</span>
+              <button type="button" id="btnFecharPainelColunas" class="btn-fechar">&times;</button>
+            </div>
+            <p class="painel-colunas-info">Marque as colunas que deseja ver na tabela.</p>
+
+            <div class="painel-colunas-grid">
+              <label class="sempre-visivel">
+                <input type="checkbox" checked disabled>
+                Nome (sempre visível)
+              </label>
+
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="dataCadastro" checked>
+                Data cadastro
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="dataNascimento" checked>
+                Data nasc.
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="sexo" checked>
+                Sexo
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="cpf" checked>
+                CPF
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="rg" checked>
+                RG
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="telefone1" checked>
+                Telefone 1
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="telefone2" checked>
+                Telefone 2
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="email" checked>
+                E-mail
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="enderecoBairro" checked>
+                Bairro
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="enderecoCidade" checked>
+                Cidade
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="enderecoUf" checked>
+                UF
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="obsImportantes" checked>
+                Obs. importantes
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="planoSaude" checked>
+                Plano de saúde
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="numeroCarteirinha" checked>
+                Nº carteirinha
+              </label>
+              <label>
+                <input type="checkbox" class="chk-coluna" data-col="ativo" checked>
+                Ativo
+              </label>
+            </div>
+          </div>
+
+          <!-- INFO DO PACIENTE SELECIONADO -->
+          <div id="pacienteSelecionadoInfo" class="selecionado-info">
+            Nenhum paciente selecionado.
+          </div>
+
+          <!-- BOTÕES DE AÇÃO -->
+          <div class="acoes-lista">
+            <button id="btnIrProntuario" disabled class="btn primario">
+              Abrir prontuário
+            </button>
+            <button id="btnEditar" disabled class="btn aviso">
+              Editar
+            </button>
+            <button id="btnInativar" disabled class="btn perigo">
+              Inativar
+            </button>
+            <button id="btnReativar" disabled class="btn sucesso">
+              Reativar
+            </button>
+          </div>
+
+          <!-- TABELA -->
+          <div class="tabela-wrapper">
+            <table class="tabela">
+              <thead>
+                <tr>
+                  <!-- Nome é sempre a primeira coluna -->
+                  <th scope="col" data-col="nome">Nome</th>
+                  <th scope="col" data-col="dataCadastro">Data cadastro</th>
+                  <th scope="col" data-col="dataNascimento">Data nasc.</th>
+                  <th scope="col" data-col="sexo">Sexo</th>
+                  <th scope="col" data-col="cpf">CPF</th>
+                  <th scope="col" data-col="rg">RG</th>
+                  <th scope="col" data-col="telefone1">Telefone 1</th>
+                  <th scope="col" data-col="telefone2">Telefone 2</th>
+                  <th scope="col" data-col="email">E-mail</th>
+                  <th scope="col" data-col="enderecoBairro">Bairro</th>
+                  <th scope="col" data-col="enderecoCidade">Cidade</th>
+                  <th scope="col" data-col="enderecoUf">UF</th>
+                  <th scope="col" data-col="obsImportantes">Obs. importantes</th>
+                  <th scope="col" data-col="planoSaude">Plano de saúde</th>
+                  <th scope="col" data-col="numeroCarteirinha">Nº carteirinha</th>
+                  <th scope="col" data-col="ativo">Ativo</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaPacientesBody">
+                <!-- linhas inseridas via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <p class="ajuda-tabela">
+            Clique sobre uma linha para selecionar o paciente.<br>
+            Use os botões acima para abrir o prontuário, editar ou alterar o status.
+          </p>
+        </section>
+
+      </section>
+    </main>
+  </div>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

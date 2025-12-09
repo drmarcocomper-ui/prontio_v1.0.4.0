@@ -1,0 +1,303 @@
+/* =========================================
+   PRONTIO - CSS específico do Prontuário
+   Foco: visual limpo, clínico e profissional
+   ========================================= */
+
+:root {
+  --prontuario-bg-elevated: #020617;            /* fundo de cartão */
+  --prontuario-border-subtle: #1e293b;          /* borda suave */
+  --prontuario-brand: #2563eb;                  /* azul principal */
+  --prontuario-brand-soft: rgba(37, 99, 235, 0.16);
+  --prontuario-text-muted: #9ca3af;
+  --prontuario-text-soft: #6b7280;
+}
+
+/* Layout centralizado e mais “clínico” */
+
+.content-prontuario {
+  max-width: 1100px;
+  margin: 0 auto 3rem;
+}
+
+/* Cartões do prontuário mais elegantes e discretos */
+
+.card-prontuario {
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 60%),
+    var(--prontuario-bg-elevated);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.75);
+}
+
+.card-prontuario + .card-prontuario {
+  margin-top: 1.5rem;
+}
+
+.card-header-tight {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.35rem;
+}
+
+.card-header-tight h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.card-header-tight .card-subtitle {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--prontuario-text-soft);
+}
+
+.card-body-compact {
+  padding-top: 0.6rem;
+}
+
+/* =======================
+   Cabeçalho do paciente
+   ======================= */
+
+.card-paciente .prontuario-paciente-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.paciente-nome-linha .label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--prontuario-text-muted);
+  margin-right: 0.5rem;
+}
+
+.paciente-nome {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.paciente-id-linha {
+  margin-top: 0.25rem;
+  color: var(--prontuario-text-soft);
+}
+
+.prontuario-atendimento-grid .campo-inline {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.campo-label {
+  color: var(--prontuario-text-muted);
+}
+
+.campo-valor {
+  font-weight: 500;
+}
+
+.texto-suave {
+  color: var(--prontuario-text-soft);
+}
+
+/* =======================
+   Formulário de evolução
+   ======================= */
+
+#formEvolucao textarea {
+  resize: vertical;
+  min-height: 150px;
+  font-family: inherit;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+#formEvolucao textarea::placeholder {
+  color: #6b7280;
+}
+
+.form-row-actions-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.form-row-actions-inline .btn {
+  min-width: 160px;
+}
+
+#mensagemEvolucao.mensagem {
+  margin-top: 0.75rem;
+}
+
+/* ===============================
+   Timeline do Histórico Global
+   =============================== */
+
+.prontuario-timeline {
+  position: relative;
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding-left: 0;
+}
+
+/* Linha vertical da timeline */
+.prontuario-timeline::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(148, 163, 184, 0.7),
+    rgba(148, 163, 184, 0.05)
+  );
+}
+
+/* Cada item de evolução */
+.prontuario-timeline .evolucao-item {
+  position: relative;
+  margin-left: 1.7rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem 1.15rem 1.05rem 1.35rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.75);
+}
+
+/* “Ponto” da timeline */
+.prontuario-timeline .evolucao-item::before {
+  content: "";
+  position: absolute;
+  left: -0.95rem;
+  top: 0.95rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  border: 2px solid var(--prontuario-brand);
+  background: #020617;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+}
+
+/* Destaque extra para a última evolução (primeiro item) */
+.prontuario-timeline .evolucao-item:first-child {
+  border-color: rgba(59, 130, 246, 0.85);
+  background: radial-gradient(circle at top left, var(--prontuario-brand-soft), transparent 70%),
+              rgba(15, 23, 42, 0.98);
+}
+
+/* Cabeçalho da evolução (data, autor, origem) */
+.evo-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--prontuario-text-muted);
+}
+
+.evo-data {
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.evo-autor {
+  font-weight: 500;
+}
+
+.evo-origem.badge {
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(37, 99, 235, 0.18);
+  color: #bfdbfe;
+}
+
+/* Corpo do texto da evolução */
+.evo-texto {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #e5e7eb;
+}
+
+/* Ações da última evolução (Usar como modelo / Editar) */
+
+.evo-actions {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.evo-actions button {
+  padding: 0.22rem 0.85rem;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: transparent;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.evo-actions button:hover {
+  background: var(--prontuario-brand-soft);
+  border-color: rgba(59, 130, 246, 1);
+  color: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.evo-actions .btn-evo-editar {
+  border-style: dashed;
+}
+
+/* Mensagem “vazia” do histórico */
+
+#listaEvolucoesPacienteVazia {
+  color: var(--prontuario-text-soft);
+}
+
+/* Responsivo */
+
+@media (max-width: 768px) {
+  .content-prontuario {
+    padding-inline: 0.75rem;
+  }
+
+  .card-prontuario {
+    border-radius: 10px;
+  }
+
+  .card-header-tight {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .prontuario-timeline::before {
+    left: 9px;
+  }
+
+  .prontuario-timeline .evolucao-item {
+    margin-left: 1.5rem;
+  }
+
+  .prontuario-timeline .evolucao-item::before {
+    left: -0.9rem;
+  }
+}

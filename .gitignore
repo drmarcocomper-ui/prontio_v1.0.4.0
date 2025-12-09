@@ -1,0 +1,65 @@
+# =========================================================
+# PRONTIO - .gitignore para VS Code + CLASP + Front-end
+# =========================================================
+
+########################################
+# 1. Node / npm / dependências
+########################################
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+########################################
+# 2. Ambiente do VS Code
+########################################
+.vscode/
+.history/
+*.code-workspace
+
+########################################
+# 3. Arquivos temporários do sistema
+########################################
+.DS_Store
+Thumbs.db
+
+########################################
+# 4. CLASP / Apps Script (segurança)
+########################################
+# Arquivo local — contém seu scriptId e token local
+.clasp.json
+.clasp-settings.json
+
+# Cache interno (caso exista)
+.clasp/
+
+# Impede subir um manifest duplicado fora do backend
+/appsscript.json
+
+########################################
+# 5. Build / dist (futuras versões front-end)
+########################################
+dist/
+build/
+.tmp/
+
+########################################
+# 6. Logs gerais
+########################################
+*.log
+
+########################################
+# 7. Backups / arquivos auxiliares
+########################################
+*.bak
+*.tmp
+*.swp
+*.orig
+
+########################################
+# 8. Ambiente (caso use futuramente)
+########################################
+.env
+.env.production
+.env.local
+.env.development

@@ -1,0 +1,200 @@
+/* =========================================
+   PRONTIO - Theme Dark
+   Aplicado quando <body data-theme="dark">
+   ========================================= */
+
+:root {
+  --app-brand: #3b82f6;
+  --app-brand-soft: rgba(37, 99, 235, 0.2);
+  --app-bg-body: #020617;
+  --app-bg-shell: #020617;
+  --app-bg-surface: #020617;
+  --app-bg-surface-alt: #020617;
+  --app-border-subtle: #1f2937;
+  --app-border-strong: #334155;
+  --app-text-primary: #e5e7eb;
+  --app-text-muted: #9ca3af;
+  --app-text-softer: #6b7280;
+}
+
+/* Corpo da aplicação */
+
+body[data-theme="dark"] {
+  background: radial-gradient(circle at top left, #0b1120 0%, #020617 45%, #000 100%);
+  color: var(--app-text-primary);
+}
+
+/* Shell / main-area */
+
+body[data-theme="dark"] .main-area {
+  background: transparent;
+}
+
+/* SIDEBAR ------------------------------------------------ */
+
+body[data-theme="dark"] .sidebar {
+  background: #020617;
+  border-right: 1px solid var(--app-border-subtle);
+  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.9);
+}
+
+body[data-theme="dark"] .sidebar-header {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+}
+
+body[data-theme="dark"] .app-logo {
+  color: #e5e7eb;
+}
+
+body[data-theme="dark"] .app-version {
+  color: var(--app-text-softer);
+}
+
+body[data-theme="dark"] .sidebar-nav .nav-link {
+  color: #9ca3af;
+}
+
+body[data-theme="dark"] .sidebar-nav .nav-link .icon-svg {
+  color: #6b7280;
+}
+
+body[data-theme="dark"] .sidebar-nav .nav-link:hover {
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+}
+
+body[data-theme="dark"] .sidebar-nav .nav-link.is-active,
+body[data-theme="dark"] .sidebar-nav .nav-link[data-active="true"] {
+  background: rgba(37, 99, 235, 0.18);
+  color: #bfdbfe;
+}
+
+body[data-theme="dark"] .sidebar-nav .nav-link.is-active .icon-svg,
+body[data-theme="dark"] .sidebar-nav .nav-link[data-active="true"] .icon-svg {
+  color: #60a5fa;
+}
+
+body[data-theme="dark"] .sidebar-footer {
+  border-top: 1px solid var(--app-border-subtle);
+  color: var(--app-text-softer);
+}
+
+/* TOPBAR ------------------------------------------------- */
+
+body[data-theme="dark"] .topbar {
+  background: linear-gradient(135deg, #020617 0%, #0b1120 55%, #020617 100%);
+  color: #e5e7eb;
+  border-bottom: 1px solid #111827;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.9);
+}
+
+body[data-theme="dark"] .topbar-title-main h1 {
+  color: #f9fafb;
+}
+
+body[data-theme="dark"] .topbar-subtitle {
+  color: var(--app-text-muted);
+}
+
+body[data-theme="dark"] .topbar-breadcrumb {
+  color: #cbd5f5;
+}
+
+body[data-theme="dark"] .topbar-meta-item {
+  color: #e5e7eb;
+}
+
+/* CONTEÚDO / CARDS -------------------------------------- */
+
+body[data-theme="dark"] .card {
+  background: #020617;
+  border-radius: 14px;
+  border: 1px solid rgba(30, 64, 175, 0.5);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 1);
+}
+
+body[data-theme="dark"] .card-header {
+  border-bottom: 1px solid rgba(30, 64, 175, 0.6);
+}
+
+body[data-theme="dark"] .card-header h2 {
+  color: #e5e7eb;
+}
+
+body[data-theme="dark"] .card-body {
+  background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 60%),
+              #020617;
+}
+
+body[data-theme="dark"] .msg-menor {
+  color: var(--app-text-softer);
+}
+
+/* Tabelas / listas -------------------------------------- */
+
+body[data-theme="dark"] table {
+  background: #020617;
+  border-color: #1f2937;
+}
+
+body[data-theme="dark"] th {
+  background: #020617;
+  color: #e5e7eb;
+}
+
+body[data-theme="dark"] td {
+  border-color: #111827;
+}
+
+/* BOTÕES ------------------------------------------------ */
+
+body[data-theme="dark"] .btn.primario {
+  background: var(--app-brand);
+  border-color: var(--app-brand);
+  color: #eff6ff;
+}
+
+body[data-theme="dark"] .btn.primario:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+body[data-theme="dark"] .btn.secundario {
+  background: transparent;
+  border-color: #334155;
+  color: #e5e7eb;
+}
+
+body[data-theme="dark"] .btn.secundario:hover {
+  background: rgba(15, 23, 42, 0.9);
+}
+
+/* Ícones de tema */
+
+body[data-theme="dark"] .js-toggle-theme .js-theme-icon-sun {
+  color: #fbbf24;
+}
+
+body[data-theme="dark"] .js-toggle-theme .js-theme-icon-moon {
+  color: #e5e7eb;
+}
+
+/* PRONTUÁRIO – harmonização ----------------------------- */
+
+body[data-theme="dark"] .card-prontuario {
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.14), transparent 60%),
+    #020617;
+  border-color: rgba(30, 64, 175, 0.7);
+}
+
+body[data-theme="dark"] .prontuario-timeline .evolucao-item {
+  background: rgba(15, 23, 42, 0.98);
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+body[data-theme="dark"] .prontuario-timeline .evolucao-item:first-child {
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 70%),
+    rgba(15, 23, 42, 0.98);
+}
