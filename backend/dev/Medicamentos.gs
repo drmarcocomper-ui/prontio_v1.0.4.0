@@ -1,220 +1,410 @@
 /**
- * PRONTIO - Módulo de Medicamentos
+ * PRONTIO - Medicamentos.gs (Apps Script)
  *
- * Aba esperada: "Medicamentos"
+ * PADRONIZAÇÃO PRONTIO:
+ * - Mantém as actions legadas: Medicamentos.*
+ * - Adiciona actions canônicas: Remedios.*
+ * - Mantém retorno padronizado: { success, data, errors }
  *
- * Sugestão de colunas (linha 1):
- *
- *  A: ID_Medicamento      (opcional, pode ser vazio se não quiser usar)
- *  B: Nome_Medicacao      (ex.: "Dipirona 500mg")
- *  C: Posologia           (ex.: "1 comprimido de 8/8h por 5 dias")
- *  D: Quantidade          (ex.: "10 comp."
- *  E: Via_Administracao   (ex.: "VO", "IM", "EV")
- *  F: Ativo               (opcional: TRUE/FALSE, "SIM"/"NÃO")
- *
- * Retorno esperado pelo front (page-receita.js):
- *
- *  {
- *    medicamentos: [
- *      {
- *        idMedicamento: "MED_001" ou "",
- *        nomeMedicacao: "...",
- *        posologia: "...",
- *        quantidade: "...",
- *        viaAdministracao: "...",
- *        ativo: true/false
- *      },
- *      ...
- *    ]
- *  }
+ * Observação:
+ * - NÃO é necessário renomear o arquivo .gs.
+ * - O importante é o contrato de API (actions e formato de retorno).
  */
 
-var MEDICAMENTOS_SHEET_NAME = "Medicamentos";
-
-/**
- * Roteador interno de Medicamentos.
- *
- * Chamado a partir de Api.gs -> handleMedicamentosAction(action, payload)
- *
- * Convenção de actions:
- *  - "Medicamentos_ListarTodos"
- *  - "Medicamentos_BuscarPorTermo"
- */
 function handleMedicamentosAction(action, payload) {
-  payload = payload || {};
+  var act = String(action || "");
 
-  switch (action) {
+  // ✅ Alias canônico PRONTIO (Remedios.*) -> aponta para as mesmas implementações
+  // Isso permite padronizar o front sem quebrar o legado.
+  if (act.indexOf("Remedios.") === 0) act = act.replace("Remedios.", "Medicamentos.");
+  if (act.indexOf("Remedios_") === 0) act = act.replace("Remedios_", "Medicamentos_");
+
+  switch (act) {
+    case "Medicamentos.Listar":
+    case "Medicamentos_Listar":
+      return Medicamentos_Listar_(payload);
+
+    case "Medicamentos.ListarAtivos":
+    case "Medicamentos_ListarAtivos":
+      return Medicamentos_ListarAtivos_(payload);
+
+    case "Medicamentos.ListarTodos":
     case "Medicamentos_ListarTodos":
-      return medicamentosListarTodos_();
+      return Medicamentos_ListarTodos_(payload);
 
-    case "Medicamentos_BuscarPorTermo":
-      return medicamentosBuscarPorTermo_(payload);
+    case "Medicamentos.Criar":
+    case "Medicamentos_Criar":
+      return Medicamentos_Criar_(payload);
+
+    case "Medicamentos.Atualizar":
+    case "Medicamentos_Atualizar":
+      return Medicamentos_Atualizar_(payload);
+
+    case "Medicamentos.DefinirAtivo":
+    case "Medicamentos_DefinirAtivo":
+      return Medicamentos_DefinirAtivo_(payload);
+
+    case "Medicamentos.DefinirFavorito":
+    case "Medicamentos_DefinirFavorito":
+      return Medicamentos_DefinirFavorito_(payload);
 
     default:
-      throw {
-        code: "MEDICAMENTOS_UNKNOWN_ACTION",
-        message: "Ação de medicamentos desconhecida: " + action,
-      };
+      return _medFail_("MEDICAMENTOS_UNKNOWN_ACTION", "Ação de medicamentos/remédios não reconhecida: " + act, { action: act });
   }
 }
 
-/**
- * Lê TODOS os registros da aba Medicamentos.
- *
- * Retorno:
- *  {
- *    medicamentos: [ { idMedicamento, nomeMedicacao, posologia, quantidade, viaAdministracao, ativo }, ... ]
- *  }
- */
-function medicamentosListarTodos_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(MEDICAMENTOS_SHEET_NAME);
-
-  if (!sheet) {
-    // Se a aba ainda não existe, retorna lista vazia
-    return {
-      medicamentos: [],
-    };
-  }
-
-  var lastRow = sheet.getLastRow();
-  var lastCol = sheet.getLastColumn();
-
-  if (lastRow < 2) {
-    // Só cabeçalho ou vazio
-    return {
-      medicamentos: [],
-    };
-  }
-
-  // Lê cabeçalho
-  var headerRange = sheet.getRange(1, 1, 1, lastCol);
-  var headerValues = headerRange.getValues()[0];
-
-  // Função auxiliar para achar índice de coluna (1-based) por nome
-  function findColIndex_(nomeColuna) {
-    nomeColuna = String(nomeColuna || "").toUpperCase().trim();
-    for (var i = 0; i < headerValues.length; i++) {
-      var h = String(headerValues[i] || "").toUpperCase().trim();
-      if (h === nomeColuna) {
-        return i + 1; // 1-based
-      }
-    }
-    return -1;
-  }
-
-  var colId = findColIndex_("ID_MEDICAMENTO");
-  var colNome = findColIndex_("NOME_MEDICACAO");
-  var colPosologia = findColIndex_("POSOLOGIA");
-  var colQtd = findColIndex_("QUANTIDADE");
-  var colVia = findColIndex_("VIA_ADMINISTRACAO");
-  var colAtivo = findColIndex_("ATIVO");
-
-  // Lê todas as linhas de dados
-  var dataRange = sheet.getRange(2, 1, lastRow - 1, lastCol);
-  var dataValues = dataRange.getValues();
-
-  var lista = [];
-
-  for (var r = 0; r < dataValues.length; r++) {
-    var row = dataValues[r];
-
-    // Nome é obrigatório para considerar o registro
-    var nomeMed = colNome > 0 ? String(row[colNome - 1] || "").trim() : "";
-    if (!nomeMed) {
-      continue;
-    }
-
-    var obj = {
-      idMedicamento:
-        colId > 0 ? String(row[colId - 1] || "").trim() : "",
-      nomeMedicacao: nomeMed,
-      posologia:
-        colPosologia > 0 ? String(row[colPosologia - 1] || "").trim() : "",
-      quantidade:
-        colQtd > 0 ? String(row[colQtd - 1] || "").trim() : "",
-      viaAdministracao:
-        colVia > 0 ? String(row[colVia - 1] || "").trim() : "",
-      ativo: true,
-    };
-
-    if (colAtivo > 0) {
-      var valAtivo = row[colAtivo - 1];
-      // aceita boolean, "SIM", "NÃO", "ATIVO", etc.
-      if (typeof valAtivo === "boolean") {
-        obj.ativo = valAtivo;
-      } else {
-        var sAtivo = String(valAtivo || "")
-          .toUpperCase()
-          .trim();
-        if (!sAtivo || sAtivo === "SIM" || sAtivo === "S" || sAtivo === "ATIVO") {
-          obj.ativo = true;
-        } else if (sAtivo === "NÃO" || sAtivo === "NAO" || sAtivo === "N" || sAtivo === "INATIVO") {
-          obj.ativo = false;
-        }
-      }
-    }
-
-    // Se quiser filtrar somente ativos, descomente:
-    // if (!obj.ativo) continue;
-
-    lista.push(obj);
-  }
-
-  return {
-    medicamentos: lista,
-  };
-}
-
-/**
- * Busca por termo na aba de Medicamentos.
- *
- * payload:
- *  {
- *    termo: "dipir",
- *    incluirInativos: false (opcional, default false)
- *  }
- *
- * Retorno:
- *  {
- *    medicamentos: [...]
- *  }
- */
-function medicamentosBuscarPorTermo_(payload) {
+function Medicamentos_Listar_(payload) {
   payload = payload || {};
-  var termo = String(payload.termo || "").toLowerCase().trim();
-  var incluirInativos = payload.incluirInativos === true;
+  var somenteAtivos = payload.somenteAtivos !== false;
+  return somenteAtivos ? Medicamentos_ListarAtivos_(payload) : Medicamentos_ListarTodos_(payload);
+}
 
-  var base = medicamentosListarTodos_();
-  var lista = base.medicamentos || [];
+function Medicamentos_ListarAtivos_(payload) {
+  try {
+    var sh = _medGetOrCreateMedicamentosSheet_();
+    var rows = _medReadAll_(sh);
 
-  if (!termo) {
-    // se não tem termo, pode devolver tudo ou nada; aqui devolvemos tudo
-    if (!incluirInativos) {
-      lista = lista.filter(function (m) {
-        return m.ativo;
+    var q = String(payload && (payload.q || payload.termo) ? (payload.q || payload.termo) : "").trim().toLowerCase();
+    var limit = Number(payload && (payload.limit || payload.limite) ? (payload.limit || payload.limite) : 200);
+    if (!isFinite(limit) || limit <= 0) limit = 200;
+    if (limit > 500) limit = 500;
+
+    var ativos = rows.filter(function (r) {
+      return _medToBool_(r.Ativo, true) === true;
+    });
+
+    if (q) {
+      ativos = ativos.filter(function (r) {
+        var nome = String(r.Nome_Medicacao || "").toLowerCase();
+        return nome.indexOf(q) >= 0;
       });
     }
-    return {
-      medicamentos: lista,
-    };
+
+    ativos.sort(function (a, b) {
+      var fa = _medToBool_(a.Favorito, false) ? 1 : 0;
+      var fb = _medToBool_(b.Favorito, false) ? 1 : 0;
+      if (fa !== fb) return fb - fa;
+
+      var na = String(a.Nome_Medicacao || "").toLowerCase();
+      var nb = String(b.Nome_Medicacao || "").toLowerCase();
+      return na.localeCompare(nb);
+    });
+
+    var total = ativos.length;
+    var sliced = ativos.slice(0, limit);
+
+    // ✅ PADRONIZAÇÃO: expõe "remedios" (canônico) e "medicamentos" (legado)
+    // - O front novo usa data.remedios
+    // - O front antigo usa data.medicamentos
+    var listaCanonica = sliced.map(function (r) {
+      var nome = String(r.Nome_Medicacao || "").trim();
+      var apresentacao = String(r.Quantidade || "").trim();
+      if (!apresentacao) apresentacao = String(r.Via_Administracao || "").trim();
+
+      // item "canônico" (Remedios)
+      return {
+        ID_Remedio: String(r.ID_Medicamento || ""),
+        idRemedio: String(r.ID_Medicamento || ""),
+        Nome_Remedio: nome,
+        nomeRemedio: nome,
+        remedio: nome,
+
+        // mantém também campos úteis
+        Posologia: String(r.Posologia || ""),
+        Via_Administracao: String(r.Via_Administracao || ""),
+        Quantidade: String(r.Quantidade || ""),
+        Tipo_Receita: String(r.Tipo_Receita || ""),
+
+        apresentacao: apresentacao,
+        favorito: _medToBool_(r.Favorito, false),
+        ativo: _medToBool_(r.Ativo, true)
+      };
+    });
+
+    // versão legado (Medicamentos) — mantida
+    var listaLegado = listaCanonica.map(function (x) {
+      return {
+        ID_Medicamento: x.ID_Remedio,
+        idMedicamento: x.idRemedio,
+        Nome_Medicacao: x.Nome_Remedio,
+        nome: x.nomeRemedio,
+        nomeMedicamento: x.nomeRemedio,
+        Posologia: x.Posologia,
+        Via_Administracao: x.Via_Administracao,
+        Quantidade: x.Quantidade,
+        Tipo_Receita: x.Tipo_Receita,
+        apresentacao: x.apresentacao,
+        favorito: x.favorito,
+        ativo: x.ativo
+      };
+    });
+
+    return _medOk_({
+      // ✅ CANÔNICO
+      remedios: listaCanonica,
+      total: total,
+      retornados: listaCanonica.length,
+
+      // ✅ LEGADO (não usar no front novo, mas não quebra o antigo)
+      medicamentos: listaLegado
+    });
+  } catch (err) {
+    return _medFail_(
+      "MEDICAMENTOS_LISTAR_ATIVOS_ERROR",
+      "Falha ao listar itens ativos.",
+      String(err && err.message ? err.message : err)
+    );
   }
+}
 
-  var filtrados = lista.filter(function (m) {
-    if (!incluirInativos && !m.ativo) return false;
+function Medicamentos_ListarTodos_(payload) {
+  try {
+    var sh = _medGetOrCreateMedicamentosSheet_();
+    var rows = _medReadAll_(sh);
 
-    var comp =
-      (m.nomeMedicacao || "") +
-      " " +
-      (m.posologia || "") +
-      " " +
-      (m.quantidade || "") +
-      " " +
-      (m.viaAdministracao || "");
-    return comp.toLowerCase().indexOf(termo) !== -1;
-  });
+    var q = String(payload && (payload.q || payload.termo) ? (payload.q || payload.termo) : "").trim().toLowerCase();
+    var limit = Number(payload && (payload.limit || payload.limite) ? (payload.limit || payload.limite) : 300);
+    if (!isFinite(limit) || limit <= 0) limit = 300;
+    if (limit > 1000) limit = 1000;
 
+    if (q) {
+      rows = rows.filter(function (r) {
+        var nome = String(r.Nome_Medicacao || "").toLowerCase();
+        return nome.indexOf(q) >= 0;
+      });
+    }
+
+    rows.sort(function (a, b) {
+      var fa = _medToBool_(a.Favorito, false) ? 1 : 0;
+      var fb = _medToBool_(b.Favorito, false) ? 1 : 0;
+      if (fa !== fb) return fb - fa;
+
+      var aa = _medToBool_(a.Ativo, true) ? 1 : 0;
+      var ab = _medToBool_(b.Ativo, true) ? 1 : 0;
+      if (aa !== ab) return ab - aa;
+
+      var na = String(a.Nome_Medicacao || "").toLowerCase();
+      var nb = String(b.Nome_Medicacao || "").toLowerCase();
+      return na.localeCompare(nb);
+    });
+
+    var sliced = rows.slice(0, limit);
+
+    var listaCanonica = sliced.map(function (r) {
+      var nome = String(r.Nome_Medicacao || "").trim();
+      var apresentacao = String(r.Quantidade || "").trim();
+      if (!apresentacao) apresentacao = String(r.Via_Administracao || "").trim();
+
+      return {
+        ID_Remedio: String(r.ID_Medicamento || ""),
+        idRemedio: String(r.ID_Medicamento || ""),
+        Nome_Remedio: nome,
+        nomeRemedio: nome,
+        remedio: nome,
+        Posologia: String(r.Posologia || ""),
+        Via_Administracao: String(r.Via_Administracao || ""),
+        Quantidade: String(r.Quantidade || ""),
+        Tipo_Receita: String(r.Tipo_Receita || ""),
+        apresentacao: apresentacao,
+        favorito: _medToBool_(r.Favorito, false),
+        ativo: _medToBool_(r.Ativo, true),
+        CriadoEmISO: String(r.CriadoEmISO || ""),
+        AtualizadoEmISO: String(r.AtualizadoEmISO || "")
+      };
+    });
+
+    var listaLegado = listaCanonica.map(function (x) {
+      return {
+        ID_Medicamento: x.ID_Remedio,
+        idMedicamento: x.idRemedio,
+        Nome_Medicacao: x.Nome_Remedio,
+        nome: x.nomeRemedio,
+        nomeMedicamento: x.nomeRemedio,
+        Posologia: x.Posologia,
+        Via_Administracao: x.Via_Administracao,
+        Quantidade: x.Quantidade,
+        Tipo_Receita: x.Tipo_Receita,
+        apresentacao: x.apresentacao,
+        favorito: x.favorito,
+        ativo: x.ativo,
+        CriadoEmISO: x.CriadoEmISO,
+        AtualizadoEmISO: x.AtualizadoEmISO
+      };
+    });
+
+    return _medOk_({
+      remedios: listaCanonica,
+      total: rows.length,
+      retornados: listaCanonica.length,
+      medicamentos: listaLegado
+    });
+  } catch (err) {
+    return _medFail_(
+      "MEDICAMENTOS_LISTAR_TODOS_ERROR",
+      "Falha ao listar todos os itens.",
+      String(err && err.message ? err.message : err)
+    );
+  }
+}
+
+function Medicamentos_Criar_(payload) {
+  try {
+    var sh = _medGetOrCreateMedicamentosSheet_();
+
+    // ✅ aceita nome via padrão antigo ou novo
+    var nome = String(
+      payload && (
+        payload.Nome_Medicacao ||
+        payload.Nome_Remedio ||
+        payload.nomeRemedio ||
+        payload.remedio ||
+        ""
+      )
+    ).trim();
+
+    if (!nome) return _medFail_("MEDICAMENTOS_NOME_OBRIGATORIO", "Nome do remédio é obrigatório.", null);
+
+    var id = Utilities.getUuid();
+    var nowISO = new Date().toISOString();
+
+    var pos = String(payload && payload.Posologia ? payload.Posologia : "");
+    var via = String(payload && payload.Via_Administracao ? payload.Via_Administracao : "");
+    var qtd = String(payload && payload.Quantidade ? payload.Quantidade : "");
+    var tipo = String(payload && payload.Tipo_Receita ? payload.Tipo_Receita : "");
+
+    var fav = _medToBool_(payload && payload.Favorito, false);
+    var ativo = _medToBool_(payload && payload.Ativo, true);
+
+    sh.appendRow([id, nome, pos, via, qtd, tipo, fav, ativo, nowISO, nowISO]);
+
+    return _medOk_({ ID_Remedio: id, ID_Medicamento: id });
+  } catch (err) {
+    return _medFail_(
+      "MEDICAMENTOS_CRIAR_ERROR",
+      "Falha ao criar item.",
+      String(err && err.message ? err.message : err)
+    );
+  }
+}
+
+function Medicamentos_Atualizar_(payload) {
+  try {
+    var sh = _medGetOrCreateMedicamentosSheet_();
+
+    var id = String(
+      payload && (
+        payload.ID_Medicamento ||
+        payload.ID_Remedio ||
+        payload.idMedicamento ||
+        payload.idRemedio ||
+        ""
+      )
+    ).trim();
+
+    if (!id) return _medFail_("MEDICAMENTOS_ID_OBRIGATORIO", "ID é obrigatório.", null);
+
+    var info = _medFindRowById_(sh, id);
+    if (!info) return _medFail_("MEDICAMENTOS_NAO_ENCONTRADO", "Item não encontrado.", { id: id });
+
+    var row = info.row;
+    var nowISO = new Date().toISOString();
+
+    // aceita update por campos antigos e novos
+    if (payload.Nome_Medicacao != null || payload.Nome_Remedio != null || payload.nomeRemedio != null || payload.remedio != null) {
+      var nome = String(payload.Nome_Medicacao || payload.Nome_Remedio || payload.nomeRemedio || payload.remedio || "").trim();
+      sh.getRange(row, 2).setValue(nome);
+    }
+
+    if (payload.Posologia != null) sh.getRange(row, 3).setValue(String(payload.Posologia || ""));
+    if (payload.Via_Administracao != null) sh.getRange(row, 4).setValue(String(payload.Via_Administracao || ""));
+    if (payload.Quantidade != null) sh.getRange(row, 5).setValue(String(payload.Quantidade || ""));
+    if (payload.Tipo_Receita != null) sh.getRange(row, 6).setValue(String(payload.Tipo_Receita || ""));
+
+    sh.getRange(row, 10).setValue(nowISO);
+
+    return _medOk_({ ID_Remedio: id, ID_Medicamento: id });
+  } catch (err) {
+    return _medFail_(
+      "MEDICAMENTOS_ATUALIZAR_ERROR",
+      "Falha ao atualizar item.",
+      String(err && err.message ? err.message : err)
+    );
+  }
+}
+
+function Medicamentos_DefinirAtivo_(payload) {
+  try {
+    var sh = _medGetOrCreateMedicamentosSheet_();
+    var id = String(payload && (payload.ID_Medicamento || payload.ID_Remedio || payload.idMedicamento || payload.idRemedio) ? (payload.ID_Medicamento || payload.ID_Remedio || payload.idMedicamento || payload.idRemedio) : "").trim();
+    if (!id) return _medFail_("MEDICAMENTOS_ID_OBRIGATORIO", "ID é obrigatório.", null);
+
+    var ativo = _medToBool_(payload && payload.Ativo, true);
+
+    var info = _medFindRowById_(sh, id);
+    if (!info) return _medFail_("MEDICAMENTOS_NAO_ENCONTRADO", "Item não encontrado.", { id: id });
+
+    var row = info.row;
+    var nowISO = new Date().toISOString();
+
+    sh.getRange(row, 8).setValue(ativo);
+    sh.getRange(row, 10).setValue(nowISO);
+
+    return _medOk_({ ID_Remedio: id, ID_Medicamento: id, Ativo: ativo });
+  } catch (err) {
+    return _medFail_(
+      "MEDICAMENTOS_DEFINIR_ATIVO_ERROR",
+      "Falha ao definir ativo.",
+      String(err && err.message ? err.message : err)
+    );
+  }
+}
+
+function Medicamentos_DefinirFavorito_(payload) {
+  try {
+    var sh = _medGetOrCreateMedicamentosSheet_();
+    var id = String(payload && (payload.ID_Medicamento || payload.ID_Remedio || payload.idMedicamento || payload.idRemedio) ? (payload.ID_Medicamento || payload.ID_Remedio || payload.idMedicamento || payload.idRemedio) : "").trim();
+    if (!id) return _medFail_("MEDICAMENTOS_ID_OBRIGATORIO", "ID é obrigatório.", null);
+
+    var fav = _medToBool_(payload && payload.Favorito, false);
+
+    var info = _medFindRowById_(sh, id);
+    if (!info) return _medFail_("MEDICAMENTOS_NAO_ENCONTRADO", "Item não encontrado.", { id: id });
+
+    var row = info.row;
+    var nowISO = new Date().toISOString();
+
+    sh.getRange(row, 7).setValue(fav);
+    sh.getRange(row, 10).setValue(nowISO);
+
+    return _medOk_({ ID_Remedio: id, ID_Medicamento: id, Favorito: fav });
+  } catch (err) {
+    return _medFail_(
+      "MEDICAMENTOS_DEFINIR_FAVORITO_ERROR",
+      "Falha ao definir favorito.",
+      String(err && err.message ? err.message : err)
+    );
+  }
+}
+
+/**
+ * ✅ Helpers retorno padronizado
+ */
+function _medOk_(data) {
+  return { success: true, data: data, errors: [] };
+}
+
+function _medFail_(code, message, details) {
   return {
-    medicamentos: filtrados,
+    success: false,
+    data: null,
+    errors: [{
+      code: String(code || "MEDICAMENTOS_ERROR"),
+      message: String(message || "Erro no módulo de medicamentos."),
+      details: typeof details === "undefined" ? null : details
+    }]
   };
 }
+
+/**
+ * Mantidos (seu código original)
+ */

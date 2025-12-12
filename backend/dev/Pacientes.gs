@@ -1,59 +1,9 @@
-// Pacientes.gs
-// ---------------------------------------------------------------------------
-// Módulo backend de Pacientes do PRONTIO
-//
-// *** CABEÇALHO ATUAL DA SUA ABA "Pacientes" (linha 1) ***
-//  A: ID_Paciente
-//  B: NomeCompleto
-//  C: CPF
-//  D: Telefone
-//  E: DataNascimento
-//  F: E-mail
-//  G: Sexo
-//  H: Cidade
-//  I: Bairro
-//  J: Profissão
-//  K: PlanoSaude
-//  L: DataCadastro
-//  M: Ativo   (SIM / NAO)
-//
-// *** COLUNAS OPCIONAIS (criadas pelo script de migração) ***
-//  N: RG
-//  O: Telefone2
-//  P: EnderecoUf
-//  Q: NumeroCarteirinha
-//  R: ObsImportantes
-//
-// OBSERVAÇÕES IMPORTANTES:
-// - O FRONT NÃO SABE DOS NOMES/ORDENS DAS COLUNAS.
-// - O FRONT conversa APENAS via ações de API, por exemplo:
-//
-//   Leves (agenda, seleção):
-//   - Pacientes_ListarSelecao      (ou Pacientes.ListarSelecao)
-//   - Pacientes_CriarBasico        (ou Pacientes.CriarBasico / Pacientes.Criar)
-//   - Pacientes_BuscarSimples
-//
-//   CRUD mais completo (tela de pacientes):
-//   - Pacientes_Listar             (ou Pacientes.Listar / Pacientes.ListarTodos)
-//   - Pacientes_ObterPorId         (ou Pacientes.ObterPorId)
-//   - Pacientes_Atualizar          (ou Pacientes.Atualizar)
-//   - Pacientes_AlterarStatus      (ou Pacientes.AlterarStatusAtivo)
-//
-// ESTE MÓDULO:
-// - devolve APENAS o "data" (objeto / array);
-// - em caso de erro, lança { code, message, details }.
-// - Api.gs é quem monta { success, data, errors }.
-// ---------------------------------------------------------------------------
-
-/** Nome da aba de pacientes na planilha */
 var PACIENTES_SHEET_NAME = 'Pacientes';
 
-/** Obtém (ou cria) a aba Pacientes */
 function getPacientesSheet_() {
-  var ss = SpreadsheetApp.getActive();
+  var ss = PRONTIO_getDb_();
   var sh = ss.getSheetByName(PACIENTES_SHEET_NAME);
   if (!sh) {
-    // Se a aba não existir, criamos exatamente com o cabeçalho padrão.
     var header = [
       'ID_Paciente',
       'NomeCompleto',
@@ -68,8 +18,6 @@ function getPacientesSheet_() {
       'PlanoSaude',
       'DataCadastro',
       'Ativo'
-      // Colunas extras (RG, Telefone2, EnderecoUf, NumeroCarteirinha, ObsImportantes)
-      // podem ser adicionadas manualmente ou via função de migração abaixo.
     ];
     sh = ss.insertSheet(PACIENTES_SHEET_NAME);
     sh.getRange(1, 1, 1, header.length).setValues([header]);
@@ -77,10 +25,6 @@ function getPacientesSheet_() {
   return sh;
 }
 
-/**
- * Lê o cabeçalho da aba (linha 1) e monta um mapa:
- * { "ID_Paciente": 0, "NomeCompleto": 1, ... }
- */
 function getPacientesHeaderMap_() {
   var sh = getPacientesSheet_();
   var lastCol = sh.getLastColumn();
@@ -94,12 +38,9 @@ function getPacientesHeaderMap_() {
 
   var headerRow = sh.getRange(1, 1, 1, lastCol).getValues()[0];
   var map = {};
-
   headerRow.forEach(function (colName, index) {
     var nome = String(colName || '').trim();
-    if (nome) {
-      map[nome] = index; // índice baseado em 0
-    }
+    if (nome) map[nome] = index;
   });
 
   return map;
@@ -114,24 +55,17 @@ function getCellByColName_(row, headerMap, colName) {
 function setCellByColName_(row, headerMap, colName, value) {
   var idx = headerMap[colName];
   if (idx == null) return;
-  row[idx] = value || '';
+  row[idx] = value == null ? '' : value;
 }
 
-/**
- * Gera um ID_Paciente único e estável.
- * Formato: "PAC-<timestamp>-<random>"
- */
 function gerarIdPaciente_() {
   var prefix = 'PAC-';
   var now = new Date().getTime();
-  var rand = Math.floor(Math.random() * 1000); // 0–999
+  var rand = Math.floor(Math.random() * 1000);
   var randStr = ('000' + rand).slice(-3);
   return prefix + now + '-' + randStr;
 }
 
-/**
- * Converte Date -> "yyyy-MM-dd".
- */
 function formatDateYMD_(date) {
   if (!(date instanceof Date)) return '';
   return Utilities.formatDate(
@@ -141,36 +75,9 @@ function formatDateYMD_(date) {
   );
 }
 
-/**
- * Converte uma linha da planilha em objeto "paciente completo" para o front.
- *
- * Retorno:
- * {
- *   idPaciente,
- *   ID_Paciente,       // alias
- *   nomeCompleto,
- *   cpf,
- *   rg,
- *   telefone1,
- *   telefone2,
- *   telefone,          // alias p/ módulos antigos
- *   email,
- *   enderecoCidade,
- *   enderecoBairro,
- *   enderecoUf,
- *   profissao,
- *   planoSaude,
- *   numeroCarteirinha,
- *   obsImportantes,
- *   dataNascimento,   // "yyyy-MM-dd" ou ""
- *   dataCadastro,     // string como está gravada (ISO ou outro)
- *   ativo             // boolean
- * }
- */
 function pacienteRowToObject_(row, headerMap) {
   var idRaw = String(getCellByColName_(row, headerMap, 'ID_Paciente') || '').trim();
 
-  // Data nascimento
   var dataNascCell = getCellByColName_(row, headerMap, 'DataNascimento');
   var dataNascimentoStr = '';
   if (dataNascCell instanceof Date) {
@@ -179,7 +86,6 @@ function pacienteRowToObject_(row, headerMap) {
     dataNascimentoStr = String(dataNascCell).trim();
   }
 
-  // Data cadastro
   var dataCadCell = getCellByColName_(row, headerMap, 'DataCadastro');
   var dataCadastroStr = '';
   if (dataCadCell instanceof Date) {
@@ -188,7 +94,6 @@ function pacienteRowToObject_(row, headerMap) {
     dataCadastroStr = String(dataCadCell).trim();
   }
 
-  // Ativo
   var ativoCell = String(getCellByColName_(row, headerMap, 'Ativo') || '').trim().toUpperCase();
   var ativoBool = !(
     ativoCell === 'NAO' ||
@@ -197,25 +102,15 @@ function pacienteRowToObject_(row, headerMap) {
     ativoCell === '0'
   );
 
-  // Telefone1 principal: usa "Telefone" da sua planilha
   var telefone1Cell = '';
-  if (headerMap['Telefone'] != null) {
-    telefone1Cell = getCellByColName_(row, headerMap, 'Telefone');
-  }
+  if (headerMap['Telefone'] != null) telefone1Cell = getCellByColName_(row, headerMap, 'Telefone');
 
-  // Telefone2 opcional
   var telefone2Cell = '';
-  if (headerMap['Telefone2'] != null) {
-    telefone2Cell = getCellByColName_(row, headerMap, 'Telefone2');
-  }
+  if (headerMap['Telefone2'] != null) telefone2Cell = getCellByColName_(row, headerMap, 'Telefone2');
 
-  // E-mail (pode estar como "E-mail" ou "Email")
   var emailCell = '';
-  if (headerMap['E-mail'] != null) {
-    emailCell = getCellByColName_(row, headerMap, 'E-mail');
-  } else if (headerMap['Email'] != null) {
-    emailCell = getCellByColName_(row, headerMap, 'Email');
-  }
+  if (headerMap['E-mail'] != null) emailCell = getCellByColName_(row, headerMap, 'E-mail');
+  else if (headerMap['Email'] != null) emailCell = getCellByColName_(row, headerMap, 'Email');
 
   var cidadeCell = getCellByColName_(row, headerMap, 'Cidade');
   var bairroCell = getCellByColName_(row, headerMap, 'Bairro');
@@ -224,23 +119,23 @@ function pacienteRowToObject_(row, headerMap) {
   var numCartCell = getCellByColName_(row, headerMap, 'NumeroCarteirinha');
   var obsCell = getCellByColName_(row, headerMap, 'ObsImportantes');
 
-  var paciente = {
+  return {
     idPaciente: idRaw,
-    ID_Paciente: idRaw, // alias para compatibilidade
+    ID_Paciente: idRaw,
     nomeCompleto: String(getCellByColName_(row, headerMap, 'NomeCompleto') || '').trim(),
     cpf: String(getCellByColName_(row, headerMap, 'CPF') || '').trim(),
     rg: String(rgCell || '').trim(),
     telefone1: String(telefone1Cell || '').trim(),
     telefone2: String(telefone2Cell || '').trim(),
-    telefone: String(telefone1Cell || '').trim(), // alias p/ outros módulos
+    telefone: String(telefone1Cell || '').trim(),
     dataNascimento: dataNascimentoStr,
     email: String(emailCell || '').trim(),
     sexo: String(getCellByColName_(row, headerMap, 'Sexo') || '').trim(),
     enderecoCidade: String(cidadeCell || '').trim(),
     enderecoBairro: String(bairroCell || '').trim(),
     enderecoUf: String(ufCell || '').trim(),
-    cidade: String(cidadeCell || '').trim(),  // alias
-    bairro: String(bairroCell || '').trim(),  // alias
+    cidade: String(cidadeCell || '').trim(),
+    bairro: String(bairroCell || '').trim(),
     profissao: String(getCellByColName_(row, headerMap, 'Profissão') || '').trim(),
     planoSaude: String(getCellByColName_(row, headerMap, 'PlanoSaude') || '').trim(),
     numeroCarteirinha: String(numCartCell || '').trim(),
@@ -248,22 +143,15 @@ function pacienteRowToObject_(row, headerMap) {
     dataCadastro: dataCadastroStr,
     ativo: ativoBool
   };
-
-  return paciente;
 }
 
-/**
- * Lê todos os pacientes em forma de objetos.
- */
 function readAllPacientes_() {
   var sh = getPacientesSheet_();
   var headerMap = getPacientesHeaderMap_();
   var lastRow = sh.getLastRow();
   var lastCol = sh.getLastColumn();
 
-  if (lastRow < 2 || lastCol < 1) {
-    return [];
-  }
+  if (lastRow < 2 || lastCol < 1) return [];
 
   var values = sh.getRange(2, 1, lastRow - 1, lastCol).getValues();
   var list = [];
@@ -273,68 +161,41 @@ function readAllPacientes_() {
     if (String(row.join('')).trim() === '') continue;
 
     var paciente = pacienteRowToObject_(row, headerMap);
-
     if (!paciente.ID_Paciente && !paciente.nomeCompleto) continue;
-
     list.push(paciente);
   }
 
   return list;
 }
 
-/**
- * Roteador de ações específicas de Pacientes.
- * Chamado a partir de Api.gs com (action, payload).
- */
 function handlePacientesAction(action, payload) {
-  // Compatibilidade: aceitar tanto "Pacientes_X" quanto "Pacientes.X"
-  if (action === 'Pacientes.ListarSelecao') {
-    action = 'Pacientes_ListarSelecao';
-  }
-  if (action === 'Pacientes.CriarBasico') {
-    action = 'Pacientes_CriarBasico';
-  }
-  if (action === 'Pacientes.Criar') {
-    action = 'Pacientes_CriarBasico';
-  }
-  if (action === 'Pacientes.BuscarSimples') {
-    action = 'Pacientes_BuscarSimples';
-  }
-  if (action === 'Pacientes.Listar' || action === 'Pacientes.ListarTodos') {
-    action = 'Pacientes_Listar';
-  }
-  if (action === 'Pacientes.ObterPorId') {
-    action = 'Pacientes_ObterPorId';
-  }
-  if (action === 'Pacientes.Atualizar') {
-    action = 'Pacientes_Atualizar';
-  }
-  if (action === 'Pacientes.AlterarStatus' || action === 'Pacientes.AlterarStatusAtivo') {
-    action = 'Pacientes_AlterarStatus';
-  }
+  if (action === 'Pacientes.ListarSelecao') action = 'Pacientes_ListarSelecao';
+  if (action === 'Pacientes.CriarBasico') action = 'Pacientes_CriarBasico';
+  if (action === 'Pacientes.Criar') action = 'Pacientes_CriarBasico';
+  if (action === 'Pacientes_Criar') action = 'Pacientes_CriarBasico';
+  if (action === 'Pacientes.BuscarSimples') action = 'Pacientes_BuscarSimples';
+  if (action === 'Pacientes.Listar' || action === 'Pacientes.ListarTodos') action = 'Pacientes_Listar';
+  if (action === 'Pacientes_ObterPorId' || action === 'Pacientes.ObterPorId') action = 'Pacientes_ObterPorId';
+  if (action === 'Pacientes.Atualizar') action = 'Pacientes_Atualizar';
+  if (action === 'Pacientes_Atualizar') action = 'Pacientes_Atualizar';
+  if (action === 'Pacientes.AlterarStatus' || action === 'Pacientes.AlterarStatusAtivo') action = 'Pacientes_AlterarStatus';
+  if (action === 'Pacientes_AlterarStatusAtivo') action = 'Pacientes_AlterarStatus';
 
   switch (action) {
     case 'Pacientes_ListarSelecao':
       return Pacientes_ListarSelecao(payload);
-
     case 'Pacientes_CriarBasico':
       return Pacientes_CriarBasico(payload);
-
     case 'Pacientes_BuscarSimples':
       return Pacientes_BuscarSimples(payload);
-
     case 'Pacientes_Listar':
       return Pacientes_Listar(payload);
-
     case 'Pacientes_ObterPorId':
       return Pacientes_ObterPorId(payload);
-
     case 'Pacientes_Atualizar':
       return Pacientes_Atualizar(payload);
-
     case 'Pacientes_AlterarStatus':
       return Pacientes_AlterarStatus(payload);
-
     default:
       throw {
         code: 'PACIENTES_UNKNOWN_ACTION',
@@ -344,9 +205,6 @@ function handlePacientesAction(action, payload) {
   }
 }
 
-/**
- * Pacientes_ListarSelecao
- */
 function Pacientes_ListarSelecao(payload) {
   var todos = readAllPacientes_();
   var ativos = todos.filter(function (p) {
@@ -356,6 +214,7 @@ function Pacientes_ListarSelecao(payload) {
   var pacientes = ativos.map(function (p) {
     return {
       ID_Paciente: p.ID_Paciente,
+      idPaciente: p.idPaciente,
       nomeCompleto: p.nomeCompleto,
       documento: p.cpf,
       telefone: p.telefone1 || p.telefone || ''
@@ -365,26 +224,6 @@ function Pacientes_ListarSelecao(payload) {
   return { pacientes: pacientes };
 }
 
-/**
- * Pacientes_CriarBasico
- *
- * Aceita payload antigo e novo:
- * - nomeCompleto (obrigatório)
- * - cpf ou documento
- * - telefone1 ou telefone
- * - telefone2
- * - email
- * - dataNascimento
- * - sexo
- * - enderecoCidade ou cidade
- * - enderecoBairro ou bairro
- * - enderecoUf
- * - profissao
- * - planoSaude
- * - numeroCarteirinha
- * - obsImportantes
- * - rg
- */
 function Pacientes_CriarBasico(payload) {
   payload = payload || {};
   if (!payload.nomeCompleto) {
@@ -418,16 +257,13 @@ function Pacientes_CriarBasico(payload) {
   setCellByColName_(linha, headerMap, 'NomeCompleto', payload.nomeCompleto);
   setCellByColName_(linha, headerMap, 'CPF', cpf);
 
-  if (headerMap['Telefone'] != null) {
-    setCellByColName_(linha, headerMap, 'Telefone', telefone1);
-  }
-
-  if (headerMap['Telefone2'] != null) {
-    setCellByColName_(linha, headerMap, 'Telefone2', telefone2);
-  }
+  if (headerMap['Telefone'] != null) setCellByColName_(linha, headerMap, 'Telefone', telefone1);
+  if (headerMap['Telefone2'] != null) setCellByColName_(linha, headerMap, 'Telefone2', telefone2);
 
   setCellByColName_(linha, headerMap, 'DataNascimento', payload.dataNascimento || '');
-  setCellByColName_(linha, headerMap, 'E-mail', payload.email || '');
+  if (headerMap['E-mail'] != null) setCellByColName_(linha, headerMap, 'E-mail', payload.email || '');
+  else setCellByColName_(linha, headerMap, 'Email', payload.email || '');
+
   setCellByColName_(linha, headerMap, 'Sexo', payload.sexo || '');
   setCellByColName_(linha, headerMap, 'Cidade', cidade);
   setCellByColName_(linha, headerMap, 'Bairro', bairro);
@@ -446,23 +282,16 @@ function Pacientes_CriarBasico(payload) {
   return { ID_Paciente: idPaciente, idPaciente: idPaciente };
 }
 
-/**
- * Pacientes_BuscarSimples
- */
 function Pacientes_BuscarSimples(payload) {
   payload = payload || {};
-  var termo = String(payload.termo || '').toLowerCase().trim();
+  var termo = String(payload.termo || payload.q || '').toLowerCase().trim();
   var limite = Number(payload.limite || 30);
   if (!limite || limite <= 0) limite = 30;
 
-  if (!termo) {
-    return { pacientes: [] };
-  }
+  if (!termo) return { pacientes: [] };
 
   var todos = readAllPacientes_();
-  if (!todos.length) {
-    return { pacientes: [] };
-  }
+  if (!todos.length) return { pacientes: [] };
 
   var resultados = [];
 
@@ -470,64 +299,39 @@ function Pacientes_BuscarSimples(payload) {
     var p = todos[i];
     if (!p.ativo) continue;
 
-    var haystack = [
-      p.nomeCompleto || '',
-      p.cpf || '',
-      p.telefone1 || p.telefone || ''
-    ]
-      .join(' ')
-      .toLowerCase();
-
+    var haystack = [p.nomeCompleto || '', p.cpf || '', p.telefone1 || p.telefone || ''].join(' ').toLowerCase();
     if (haystack.indexOf(termo) !== -1) {
       resultados.push({
         ID_Paciente: p.ID_Paciente,
         idPaciente: p.idPaciente,
         nome: p.nomeCompleto,
+        nomeCompleto: p.nomeCompleto,
         documento: p.cpf,
+        cpf: p.cpf,
         telefone: p.telefone1 || p.telefone || '',
-        data_nascimento: p.dataNascimento
+        data_nascimento: p.dataNascimento,
+        dataNascimento: p.dataNascimento
       });
-
-      if (resultados.length >= limite) {
-        break;
-      }
+      if (resultados.length >= limite) break;
     }
   }
 
   return { pacientes: resultados };
 }
 
-/**
- * Pacientes_Listar
- *
- * payload:
- * {
- *   termo: "joao",
- *   somenteAtivos: true/false,
- *   ordenacao: "dataCadastroDesc" | "dataCadastroAsc" | "nomeAsc" | "nomeDesc"
- * }
- */
 function Pacientes_Listar(payload) {
   payload = payload || {};
-  var termo = String(payload.termo || '').toLowerCase().trim();
+  var termo = String(payload.termo || payload.q || '').toLowerCase().trim();
   var somenteAtivos = !!payload.somenteAtivos;
   var ordenacao = String(payload.ordenacao || 'dataCadastroDesc');
 
   var todos = readAllPacientes_();
 
   var filtrados = todos.filter(function (p) {
-    if (somenteAtivos && !p.ativo) {
-      return false;
-    }
-
+    if (somenteAtivos && !p.ativo) return false;
     if (!termo) return true;
 
-    var texto = [
-      p.nomeCompleto || '',
-      p.cpf || '',
-      (p.telefone1 || p.telefone || ''),
-      p.email || ''
-    ]
+    var texto = [p.nomeCompleto || '', p.cpf || '', (p.telefone1 || p.telefone || ''), p.email || '']
       .join(' ')
       .toLowerCase();
 
@@ -543,7 +347,6 @@ function Pacientes_Listar(payload) {
       return 0;
     }
 
-    // dataCadastroAsc / dataCadastroDesc
     var da = Date.parse(a.dataCadastro || '') || 0;
     var db = Date.parse(b.dataCadastro || '') || 0;
     if (da < db) return ordenacao === 'dataCadastroAsc' ? -1 : 1;
@@ -554,17 +357,11 @@ function Pacientes_Listar(payload) {
   return { pacientes: filtrados };
 }
 
-/**
- * Pacientes_ObterPorId
- */
 function Pacientes_ObterPorId(payload) {
   var id = '';
   if (payload) {
-    if (payload.ID_Paciente) {
-      id = String(payload.ID_Paciente).trim();
-    } else if (payload.idPaciente) {
-      id = String(payload.idPaciente).trim();
-    }
+    if (payload.ID_Paciente) id = String(payload.ID_Paciente).trim();
+    else if (payload.idPaciente) id = String(payload.idPaciente).trim();
   }
 
   if (!id) {
@@ -597,15 +394,13 @@ function Pacientes_ObterPorId(payload) {
     };
   }
 
-  var range = sh.getRange(2, 1, lastRow - 1, lastCol);
-  var values = range.getValues();
+  var values = sh.getRange(2, 1, lastRow - 1, lastCol).getValues();
 
   for (var i = 0; i < values.length; i++) {
     var row = values[i];
     var rowId = String(row[idxId] || '').trim();
     if (rowId === id) {
-      var paciente = pacienteRowToObject_(row, headerMap);
-      return { paciente: paciente };
+      return { paciente: pacienteRowToObject_(row, headerMap) };
     }
   }
 
@@ -616,38 +411,12 @@ function Pacientes_ObterPorId(payload) {
   };
 }
 
-/**
- * Pacientes_Atualizar
- *
- * Aceita:
- * {
- *   ID_Paciente ou idPaciente,
- *   nomeCompleto,
- *   dataNascimento,
- *   telefone1 ou telefone,
- *   telefone2,
- *   cpf ou documento,
- *   email,
- *   sexo,
- *   enderecoCidade ou cidade,
- *   enderecoBairro ou bairro,
- *   enderecoUf,
- *   profissao,
- *   planoSaude,
- *   numeroCarteirinha,
- *   obsImportantes,
- *   rg
- * }
- */
 function Pacientes_Atualizar(payload) {
   payload = payload || {};
 
   var id = '';
-  if (payload.ID_Paciente) {
-    id = String(payload.ID_Paciente).trim();
-  } else if (payload.idPaciente) {
-    id = String(payload.idPaciente).trim();
-  }
+  if (payload.ID_Paciente) id = String(payload.ID_Paciente).trim();
+  else if (payload.idPaciente) id = String(payload.idPaciente).trim();
 
   if (!id) {
     throw {
@@ -704,8 +473,7 @@ function Pacientes_Atualizar(payload) {
   function setFieldFromPayload(colName, propNames) {
     var hasDefined = false;
     for (var i = 0; i < propNames.length; i++) {
-      var prop = propNames[i];
-      if (Object.prototype.hasOwnProperty.call(payload, prop)) {
+      if (Object.prototype.hasOwnProperty.call(payload, propNames[i])) {
         hasDefined = true;
         break;
       }
@@ -719,50 +487,41 @@ function Pacientes_Atualizar(payload) {
     for (var j = 0; j < propNames.length; j++) {
       var pName = propNames[j];
       if (Object.prototype.hasOwnProperty.call(payload, pName)) {
-        value = payload[pName] || '';
+        value = payload[pName];
         break;
       }
     }
-    row[idx] = value;
+    row[idx] = value == null ? '' : value;
   }
 
-  setFieldFromPayload('NomeCompleto', ['nomeCompleto']);
+  setFieldFromPayload('NomeCompleto', ['nomeCompleto', 'nome']);
   setFieldFromPayload('CPF', ['cpf', 'documento']);
 
-  // Telefone principal
   if (headerMap['Telefone'] != null) {
     var telefone1 = payload.telefone1;
     if (telefone1 === undefined) telefone1 = payload.telefone;
-    if (telefone1 !== undefined) {
-      row[headerMap['Telefone']] = telefone1 || '';
-    }
+    if (telefone1 !== undefined) row[headerMap['Telefone']] = telefone1 || '';
   }
 
-  // Telefone2 opcional
   if (headerMap['Telefone2'] != null && payload.telefone2 !== undefined) {
     row[headerMap['Telefone2']] = payload.telefone2 || '';
   }
 
   setFieldFromPayload('DataNascimento', ['dataNascimento']);
-  setFieldFromPayload('E-mail', ['email']);
+  if (headerMap['E-mail'] != null) setFieldFromPayload('E-mail', ['email']);
+  else setFieldFromPayload('Email', ['email']);
+
   setFieldFromPayload('Sexo', ['sexo']);
 
-  // Endereço cidade/bairro/UF
   var cidade = payload.enderecoCidade;
   if (cidade === undefined) cidade = payload.cidade;
-  if (cidade !== undefined) {
-    setCellByColName_(row, headerMap, 'Cidade', cidade);
-  }
+  if (cidade !== undefined) setCellByColName_(row, headerMap, 'Cidade', cidade);
 
   var bairro = payload.enderecoBairro;
   if (bairro === undefined) bairro = payload.bairro;
-  if (bairro !== undefined) {
-    setCellByColName_(row, headerMap, 'Bairro', bairro);
-  }
+  if (bairro !== undefined) setCellByColName_(row, headerMap, 'Bairro', bairro);
 
-  if (payload.enderecoUf !== undefined) {
-    setCellByColName_(row, headerMap, 'EnderecoUf', payload.enderecoUf);
-  }
+  if (payload.enderecoUf !== undefined) setCellByColName_(row, headerMap, 'EnderecoUf', payload.enderecoUf);
 
   setFieldFromPayload('Profissão', ['profissao']);
   setFieldFromPayload('PlanoSaude', ['planoSaude']);
@@ -773,28 +532,15 @@ function Pacientes_Atualizar(payload) {
   var writeRowIndex = foundRowIndex + 2;
   sh.getRange(writeRowIndex, 1, 1, lastCol).setValues([row]);
 
-  var pacienteAtualizado = pacienteRowToObject_(row, headerMap);
-  return { paciente: pacienteAtualizado };
+  return { paciente: pacienteRowToObject_(row, headerMap) };
 }
 
-/**
- * Pacientes_AlterarStatus
- *
- * payload:
- * {
- *   ID_Paciente ou idPaciente,
- *   ativo: true/false
- * }
- */
 function Pacientes_AlterarStatus(payload) {
   payload = payload || {};
 
   var id = '';
-  if (payload.ID_Paciente) {
-    id = String(payload.ID_Paciente).trim();
-  } else if (payload.idPaciente) {
-    id = String(payload.idPaciente).trim();
-  }
+  if (payload.ID_Paciente) id = String(payload.ID_Paciente).trim();
+  else if (payload.idPaciente) id = String(payload.idPaciente).trim();
 
   if (!id) {
     throw {
@@ -818,6 +564,7 @@ function Pacientes_AlterarStatus(payload) {
   var sh = getPacientesSheet_();
   var headerMap = getPacientesHeaderMap_();
   var lastRow = sh.getLastRow();
+  var lastCol = sh.getLastColumn();
 
   if (lastRow < 2) {
     throw {
@@ -838,8 +585,7 @@ function Pacientes_AlterarStatus(payload) {
     };
   }
 
-  var range = sh.getRange(2, 1, lastRow - 1, sh.getLastColumn());
-  var values = range.getValues();
+  var values = sh.getRange(2, 1, lastRow - 1, lastCol).getValues();
 
   var foundRowIndex = -1;
   for (var i = 0; i < values.length; i++) {
@@ -861,9 +607,7 @@ function Pacientes_AlterarStatus(payload) {
   values[foundRowIndex][idxAtivo] = novoValor;
 
   var writeRowIndex = foundRowIndex + 2;
-  sh.getRange(writeRowIndex, 1, 1, sh.getLastColumn()).setValues([
-    values[foundRowIndex]
-  ]);
+  sh.getRange(writeRowIndex, 1, 1, lastCol).setValues([values[foundRowIndex]]);
 
   return {
     ID_Paciente: id,
@@ -871,23 +615,6 @@ function Pacientes_AlterarStatus(payload) {
     ativo: ativoBool
   };
 }
-
-/* =======================================================================
-   MIGRAÇÃO: CRIAR COLUNAS EXTRAS (RG, Telefone2, EnderecoUf, etc.)
-   -----------------------------------------------------------------------
-   Como usar:
-   1. Abra o editor do Apps Script (Extensions > Apps Script).
-   2. Abra o arquivo Pacientes.gs.
-   3. No menu suspenso de funções (topo da tela), escolha:
-        Pacientes_MigrarAdicionarColunasExtras
-   4. Clique em "Run" (Executar).
-   5. Volte na planilha, aba Pacientes, para ver as colunas novas
-      criadas à direita ("RG", "Telefone2", "EnderecoUf",
-      "NumeroCarteirinha", "ObsImportantes").
-
-   Essa função pode ser rodada mais de uma vez; se a coluna já
-   existir, ela não será duplicada.
-   ======================================================================= */
 
 function Pacientes_MigrarAdicionarColunasExtras() {
   var sh = getPacientesSheet_();
@@ -897,38 +624,17 @@ function Pacientes_MigrarAdicionarColunasExtras() {
   var existentes = {};
   for (var i = 0; i < headerRow.length; i++) {
     var nome = String(headerRow[i] || '').trim();
-    if (nome) {
-      existentes[nome] = true;
-    }
+    if (nome) existentes[nome] = true;
   }
 
-  var extras = [
-    'RG',
-    'Telefone2',
-    'EnderecoUf',
-    'NumeroCarteirinha',
-    'ObsImportantes'
-  ];
+  var extras = ['RG', 'Telefone2', 'EnderecoUf', 'NumeroCarteirinha', 'ObsImportantes'];
 
   var colunasParaAdicionar = [];
   extras.forEach(function (nome) {
-    if (!existentes[nome]) {
-      colunasParaAdicionar.push(nome);
-    }
+    if (!existentes[nome]) colunasParaAdicionar.push(nome);
   });
 
-  if (!colunasParaAdicionar.length) {
-    Logger.log('Nenhuma coluna extra nova foi necessária. Todas já existem.');
-    return;
-  }
+  if (!colunasParaAdicionar.length) return;
 
-  var novaQuantidadeColunas = headerRow.length + colunasParaAdicionar.length;
-
-  // Escreve as novas colunas no cabeçalho (linha 1) à direita das existentes
-  sh.getRange(1, headerRow.length + 1, 1, colunasParaAdicionar.length)
-    .setValues([colunasParaAdicionar]);
-
-  Logger.log(
-    'Colunas extras adicionadas na aba Pacientes: ' + colunasParaAdicionar.join(', ')
-  );
+  sh.getRange(1, headerRow.length + 1, 1, colunasParaAdicionar.length).setValues([colunasParaAdicionar]);
 }
